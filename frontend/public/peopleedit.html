@@ -4,124 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/peopleedit.css">
+    <link rel="stylesheet" href="css/back.css">
+    <link rel="stylesheet" href="css/Backstage.css">
     <link rel="stylesheet" href="css/index.css" media="all">
-    <link rel="stylesheet" href="css/sidebar.css" media="all">
+    <script src="js/front_side.js"></script>
     <title>編輯個人資料</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        main {
-            margin-top: 40px;
-        }
-
-        .contents {
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .profile {
-            margin: 20px 0;
-        }
-
-        .profile img {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            background: #ddd;
-        }
-
-        .input-group {
-            align-items: center;
-            justify-content: space-between;
-            margin: 10px 0;
-        }
-
-        .input-group label {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .input-group input {
-            margin: 20px;
-            font-size: 24px;
-            height: 50px;
-            width: 560px;
-            padding: 10px;
-            border: none;
-            background: #6874F3;
-            color: white;
-            font-size: 16px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .input-group input#name {
-            color: white;
-            font-size: 23px;
-            font-weight: bold;
-        }
-
-        .input-group input::placeholder {
-            font-weight: bold;
-            color: white;
-            font-size: 23px;
-            opacity: 1;
-        }
-
-        .save-button {
-            margin: 0 180px;
-            display: block;
-            width: 50%;
-            padding: 10px;
-            margin-top: 20px;
-            background: #E53935;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 24px;
-            font-weight: bold;
-            /* 新增字體加粗 */
-            cursor: pointer;
-        }
-
-        .save-button:hover {
-            background: #C62828;
-        }
-
-        h2 {
-            font-size: 23;
-            color: white;
-            background-color: #36393f;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            margin: 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-    </style>
-    <script>
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('collapsed');
-        }
-    </script>
 </head>
 
 <body>
-    <header class="head">
-        <iframe src="sidebar.html" frameborder="0" width="350" height="100%"></iframe>
-    </header>
-    <h2>使用者</h2>
+    <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+    <!-- 功能列表 -->
+    <div id="sidebar-container"></div>
+    <h2 class="title">使用者</h2>
     <main>
         <div class="contents">
             <div class="profile">

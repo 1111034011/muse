@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/back.css">
+    <link rel="stylesheet" href="css/Backstage.css">
+    <link rel="stylesheet" href="css/index.css" media="all">
+    <link rel="stylesheet" href="css/Playlist.css" media="all">
+    <script src="js/front_side.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歌單 </title>
+        
+</head>
+
+<body>
+    <div class="setbody">
+        <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+
+        <!-- 側邊欄 -->
+        <div id="sidebar-container"></div>
+
+        <!-- 主內容 -->
+        <div class="main">
+            <div class="header">
+                <h2 class="title">歌單</h2>
+                <button class="save-btn" onclick="openModal()">新增</button>
+            </div>
+
+            <div class="container" id="playlistContainer"></div>
+
+            <!-- 彈窗 -->
+            <div id="addPlaylistModal" class="modal">
+                <div class="modal-content">
+                    <h3>新增歌單</h3>
+                    <input type="text" id="playlistName" placeholder="輸入歌單名稱">
+                    <br>
+                    <button onclick="confirmAddPlaylist()">確認新增</button>
+                    <button onclick="closeModal()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const playlistData = [
+            { name: "喜歡的歌", image: "img/1.webp" },
+            { name: "運動撥放清單", image: "img/APT..jpg" },
+            { name: "讀書歌單", image: "img/Strategy.jpg" },
+            { name: "睡前聽", image: "img/ReallyLikeYou.jpg" },
+        ];
+
+        // 加載歌單
+        function loadPlaylists() {
+            const container = document.getElementById("playlistContainer");
+            container.innerHTML = "";
+            playlistData.forEach(playlist => {
+                const div = document.createElement("div");
+                div.className = "playlist";
+                div.innerHTML = `
+                    <img src="${playlist.image}" alt="${playlist.name}">
+                    <p>${playlist.name}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // 打開彈窗
+        function openModal() {
+            document.getElementById("addPlaylistModal").style.display = "flex";
+        }
+
+        // 關閉彈窗
+        function closeModal() {
+            document.getElementById("addPlaylistModal").style.display = "none";
+        }
+
+        // 確認新增歌單
+        function confirmAddPlaylist() {
+            const playlistName = document.getElementById("playlistName").value.trim();
+            if (!playlistName) {
+                alert("請輸入歌單名稱！");
+                return;
+            }
+            playlistData.push({ name: playlistName, image: "img/1.webp" });
+            closeModal();
+            loadPlaylists();
+        }
+
+        // 初始化
+        window.onload = function () {
+            document.getElementById("addPlaylistModal").style.display = "none";
+            loadPlaylists();
+        };
+    </script>
+</body>
+
+</html>

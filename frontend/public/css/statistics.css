@@ -1,0 +1,80 @@
+.title {
+    font-size: 38px;
+    color: white;
+    background-color: #36393f;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e3e3e3;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    margin-left: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 40px;
+    flex-direction: row;
+}
+
+.chart-container {
+    width: 40%;
+}
+
+.categories {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 40%;
+}
+
+.category {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* 彈跳視窗 */
+.tooltip {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+}
+
+.upload-container {
+    display: flex;
+    justify-content: center; /* 讓按鈕先置中 */
+}
+
+.upload-btn {
+    width: 400px;
+    font-weight: bold;
+    font-size: 25px;
+    background-color: #ED4245;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-left: 50px; /* 比正中再往右一些 */
+}

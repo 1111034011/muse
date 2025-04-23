@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MB人員管理</title>
+  <link rel="stylesheet" href="css/back.css">
+  <link rel="stylesheet" href="css/backpeople.css">
+<script src="js/side.js"></script>
+</head>
+
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+  <!-- 側邊欄 -->
+  <div id="sidebar-container"></div>
+
+  <!-- 主內容區 -->
+  <div class="main">
+    <div class="search-bar">
+      <div class="search-container">
+        <input type="text" placeholder="搜尋" id="search-input" />
+        <button id="search-button" class="search-btn">
+          <img src="img/Search 02.png" alt="搜尋" />
+        </button>
+      </div>
+    </div>
+    <div class="user-list">
+      <div class="user-head">
+        <span>使用者名</span>
+        <span>郵件</span>
+        <span>註冊日期</span>
+    </div>
+      <div class="user-item">
+          <span>用戶名稱1</span>
+          <span>abc1@mail.com</span>
+          <span>2024/09/25</span>
+      </div>
+      <div class="user-item">
+        <span>用戶名稱2</span>
+        <span>abc2@mail.com</span>
+        <span>2024/09/26</span>
+      </div>
+      <div class="user-item">
+        <span>用戶名稱3</span>
+        <span>abc3@mail.com</span>
+        <span>2024/09/27</span>
+        
+    </div>
+  </div>
+</body>
+</html>

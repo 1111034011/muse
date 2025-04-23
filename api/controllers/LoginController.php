@@ -161,7 +161,7 @@ class LoginController
             'sub' => $user->member_id,
             'iat' => time(),
             'exp' => time() + 3600, // 1 hour
-            // 'role' => $user->role, // TODO: Add role if needed
+            'role' => $user->role, // TODO: Add role
         ];
 
         $token = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
@@ -170,56 +170,11 @@ class LoginController
             'success' => true,
             'message' => '登入成功',
             'token' => $token,
+            'role' => $user->role,
         ];
 
     }
 
-
-
-    // //user add
-    // public function add(Request $request)
-    // {
-
-    //     // $data = $request->body();
-    //     // if (empty($data)) {
-    //     //     $data = json_decode(file_get_contents('php://input'), true);
-    //     // }
-    //     // $username = $request->body()['username'] ?? null;
-    //     // $pin_num = $request->body()['pin_num'] ?? null;
-
-    //     // // var_dump($request->body());
-    //     // // var_dump($username, $email, $password);
-    //     // if (empty($username) || empty($pin_num)) {
-    //     //     return ['error' => '所有欄位都是必填的'];
-    //     // }
-
-    //     // $user = new User();
-    //     // $user->username = $username;
-    //     // $user->pin_num = $pin_num;
-
-    //     // if ($user->save_add(int $memberId)) {
-    //     //     return ['success' => '新增成功'];
-    //     // } else {
-    //     //     return ['error' => '新增失敗，請稍後再試'];
-    //     // }
-    //     $username = $request->body()['username'] ?? null;
-    //     $pin_num = $request->body()['pin_num'] ?? null;
-    //     $memberId = $request->body()['member_id'] ?? null; // 把主帳號 ID 也拿進來
-
-    //     if (empty($username) || empty($pin_num) || empty($memberId)) {
-    //         return ['error' => '所有欄位都是必填的'];
-    //     }
-
-    //     $user = new User();
-    //     $user->username = $username;
-    //     $user->pin_num = $pin_num;
-
-    //     if ($user->save_add((int) $memberId)) {
-    //         return ['success' => '新增成功'];
-    //     } else {
-    //         return ['error' => '新增失敗，請稍後再試'];
-    //     }
-    // }
     //user information edit
     public function Imedit(Request $request)
     {

@@ -1,0 +1,56 @@
+* 表單區域 */ .music-edit-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.form-row-btn {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 120px;
+}
+
+.input-group {
+  width: 48%;
+}
+
+label {
+  display: block;
+  color: #77BDFF;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="file"] {
+  font-weight: bold;
+  width: 100%;
+  padding: 20px;
+  background-color: #2E2E42;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+input[type="text"]:focus,
+input[type="file"]:focus {
+  outline: none;
+  border-color: #77BDFF;
+}
+
+input[type="text"]::placeholder,
+input[type="file"]::placeholder {
+  color: #bebebe;
+  ;
+  opacity: 1;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>MB 系統設定</title>
+  <link rel="stylesheet" href="css/back.css">
+  <link rel="stylesheet" href="css/BackSet.css">
+  <link rel="stylesheet" href="css/pop.css">
+  <script src="js/pop.js"></script>
+  <script src="js/side.js"></script>
+  <link rel="stylesheet" href="../RWD.css">
+</head>
+
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+
+  <!-- 側邊欄 -->
+  <div id="sidebar-container"></div>
+  <div class="header">
+    <h1>系統設定</h1>
+  </div>
+
+  <!-- 主內容 -->
+  <div class="main">
+    <div class="setting-group">
+      <h2>管理者資訊</h2>
+      <p>帳號：admin@gmail.com</p>
+    </div>
+
+    <div class="form-row">
+      <button class="btn" onclick="openModal()">修改密碼</button>
+      <button class="btn" onclick="location.href='login.html'">登出後台</button>
+    </div>
+  </div>
+
+  <!-- 彈窗 -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">x</button>
+      <h1>編輯密碼</h1>
+      <form action="BackSet.html" method="POST" target="_parent" onsubmit="return validatePasswords();"
+        style="width: 95%;">
+        <div>
+          <label for="password">原始密碼</label>
+          <input type="text" id="password" name="password" value="zxcv1234" disabled required>
+        </div>
+        <div>
+          <label for="new-password">修改密碼</label>
+          <input type="password" id="new-password" name="new-password" required>
+        </div>
+        <div>
+          <label for="confirm-password">確認密碼</label>
+          <input type="password" id="confirm-password" name="confirm-password" required>
+        </div>
+        <div>
+          <button type="submit" class="save">儲存</button>
+        </div>
+        <div>
+          <span id="error-message" class="error-message">密碼不一致，請重新輸入</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/back.css">
+    <link rel="stylesheet" href="css/Backstage.css">
+    <link rel="stylesheet" href="css/index.css" media="all">
+    <link rel="stylesheet" href="css/Manage_permissions.css" media="all">
+    <script src="js/front_side.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>權限設定</title>
+
+</head>
+
+<body>
+    <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+    <div id="sidebar-container"></div>
+    <div class="main">
+        <h2 class="title">權限</h2>
+        <button class="save-btn" onclick="openModal()">新增</button>
+        <div class="container" id="userList">
+            <!-- 動態生成 -->
+            <div class="user-item">
+                <span>大大</span>
+                <div class="user-controls">
+                    <button onclick="openModal(0)" class="edit">編輯</button>
+                    <button onclick="deleteUser(0)" class="del">刪除</button>
+                </div>
+            </div>
+            <div class="user-item">
+                <span>黃黃</span>
+                <div class="user-controls">
+                    <button onclick="openModal(0)" class="edit">編輯</button>
+                    <button onclick="deleteUser(0)" class="del">刪除</button>
+                </div>
+            </div>
+            <div class="user-item">
+                <span>石</span>
+                <div class="user-controls">
+                    <button onclick="openModal(0)" class="edit">編輯</button>
+                    <button onclick="deleteUser(0)" class="del">刪除</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="userModal">
+            <h3 id="modalTitle" class="modalTitle">使用者設定</h3>
+            <label id="usernameLabel">帳號:
+                <span id="usernameText"></span>
+                <input type="text" id="username" style="display: none;">
+            </label>
+            <label id="passwordLabel">密碼:<input type="password" id="password"></label>
+            <label>權限
+                <select id="role">
+                    <option value="一般">一般</option>
+                    <option value="青少年">青少年</option>
+                </select>
+            </label>
+            <button id="confirmBtn" class="modelbyes">確認</button>
+            <button onclick="closeModal()" class="modelbno">取消</button>
+        </div>
+    </div>
+</body>
+
+</html>

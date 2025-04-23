@@ -1,0 +1,123 @@
+.error-text {
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+body {
+    background: #CEDEF6;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.login {
+    background: #36393F;
+    width: 630px;
+    height: 450px;
+    padding: 10px 40px;
+    border-radius: 12px;
+    text-align: center;
+    align-items: center;
+}
+
+.login h2 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 26px;
+}
+
+.logintop {
+    width: 100%;
+}
+
+.inputtext {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.inputtext label {
+    color: white;
+    font-size: 20px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.inputtext input {
+    font-size: 18px;
+    width: 450px;
+    margin: 15px 5px;
+    height: 50px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ffffff;
+    background-color: #22252C;
+    color: white;
+    text-align: center;
+    outline: none;
+}
+
+.inputtext input::placeholder {
+    color: white;
+    opacity: 0.9;
+}
+
+.logindown {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 0 20px;
+}
+
+.login-button {
+    width: 250px;
+    margin: 0 15px;
+    height: 52px;
+    border-radius: 8px;
+    border: none;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.login-login {
+    background-color: #4b53ff;
+}
+
+.login-login:hover {
+    background-color: #3a42cc;
+}
+
+.login-register {
+    background-color: #2ba84a;
+}
+
+.login-register:hover {
+    background-color: #23893a;
+}
+
+
+/* 忘記密碼樣式 */
+.forgot-password {
+    margin-top: 15px;
+}
+
+.forgot-password a {
+    text-decoration: none;
+    color: #bbbbbb;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.forgot-password a:hover {
+    color: white;
+}

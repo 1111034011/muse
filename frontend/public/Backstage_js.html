@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MB後台總覽</title>
+  <link rel="stylesheet" href="css/back.css">
+  <link rel="stylesheet" href="css/Backstage.css">
+  <link rel="stylesheet" href="../RWD.css">
+  <script src="js/side.js"></script>
+</head>
+
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+
+  <!-- 這個 div 用來插入側邊欄 -->
+  <div id="sidebar-container"></div>
+
+  <!-- 主內容區 -->
+  <div class="main">
+    <div class="search-bar">
+      <div class="search-container">
+        <input type="text" placeholder="搜尋" id="search-input" />
+        <button id="search-button" class="search-btn">
+          <img src="img/Search 02.png" alt="搜尋" />
+        </button>
+      </div>
+    </div>
+
+    <div class="dashboard-cards">
+      <div class="card">
+        <h3>歌曲數量</h3>
+        <p>1,204</p>
+      </div>
+      <div class="card">
+        <h3>用戶數</h3>
+        <p>1,204</p>
+      </div>
+    </div>
+
+    <div class="hot-section">
+      <h3>本月熱門</h3>
+      <div class="hot-tracks">
+        <div class="hot-track" onclick="location.href='#'">第一名歌曲</div>
+        <div class="hot-track" onclick="location.href='#'">第二名歌曲</div>
+        <div class="hot-track" onclick="location.href='#'">第三名歌曲</div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

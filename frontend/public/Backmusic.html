@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MB-歌曲管理</title>
+  <link rel="stylesheet" href="css/back.css">
+  <link rel="stylesheet" href="css/backmusic.css">
+  <script src="js/side.js"></script>
+</head>
+
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+  <!-- 側邊欄 -->
+  <div id="sidebar-container"></div>
+
+  <!-- 主內容區 -->
+  <div class="main">
+    <div class="search-bar">
+      <div class="search-container">
+        <input type="text" placeholder="搜尋" id="search-input" />
+        <button id="search-button" class="search-btn">
+          <img src="img/Search 02.png" alt="搜尋" />
+        </button>
+      </div>
+      <select>
+        <option value="">篩選</option>
+        <option value="pop">流行</option>
+        <option value="rock">搖滾</option>
+        <option value="hiphop">嘻哈</option>
+        <option value="electro">電子</option>
+        <option value="jazz">爵士</option>
+        <option value="classical">古典</option>
+        <option value="blues">藍調</option>
+        <option value="country">鄉村</option>
+        <option value="reggae">雷鬼</option>
+        <option value="rnb">R&B</option>
+
+      </select>
+      <a href="Back_UploadMusic.html" class="upload">上傳音樂</a>
+    </div>
+    <div class="song-list">
+      <div class="song-head">
+        <span class="item-name">歌曲名稱</span>
+        <div style="width: 50px;"></div>
+        <span class="item-limit">限制</span>
+        <span class="item-author">作者</span>
+        <span class="item-type">類型</span>
+        <span>操作</span>
+      </div>
+
+
+      <div class="song-item">
+        <img src="img/SING.jpg">
+        <span class="item-name">歌曲名稱1</span>
+        <span class="item-limit">限制</span>
+        <span class="item-author">作者</span>
+        <span class="item-type">流行</span>
+        <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
+        <button class="btn-delete">刪除</button>
+      </div>
+      <div class="song-item">
+        <img src="img/SING.jpg">
+        <span class="item-name">歌曲名稱2</span>
+        <span class="item-limit">一般</span>
+        <span class="item-author">作者</span>
+        <span class="item-type">電子</span>
+        <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
+        <button class="btn-delete">刪除</button>
+      </div>
+      <div class="song-item">
+        <img src="img/SING.jpg">
+        <span class="item-name">歌曲名稱3</span>
+        <span class="item-limit">一般</span>
+        <span class="item-author">作者</span>
+        <span class="item-type">搖滾</span>
+        <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
+        <button class="btn-delete">刪除</button>
+      </div>
+      <div class="song-item">
+        <img src="img/SING.jpg">
+        <span class="item-name">歌曲名稱4</span>
+        <span class="item-limit">限制</span>
+        <span class="item-author">作者</span>
+        <span class="item-type">雷鬼</span>
+        <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
+        <button class="btn-delete">刪除</button>
+      </div>
+      <div class="song-item">
+        <img src="img/SING.jpg">
+        <span class="item-name">歌曲名稱5</span>
+        <span class="item-limit">一般</span>
+        <span class="item-author">作者</span>
+        <span class="item-type">電子</span>
+        <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
+        <button class="btn-delete">刪除</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

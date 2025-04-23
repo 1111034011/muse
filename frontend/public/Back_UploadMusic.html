@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>MB-上傳音樂</title>
+  <link rel="stylesheet" href="css/back.css">
+  <link rel="stylesheet" href="css/BackSet.css">
+  <link rel="stylesheet" href="css/Back_uploadmusic.css">
+  <script src="js/side.js"></script>
+</head>
+
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+  <div id="sidebar-container"></div>
+  
+  <div class="header">
+    <h1>上傳歌曲</h1>
+  </div>
+
+  <!-- 主內容 -->
+  <div class="main">
+    <form class="music-upload-form" action="Backmusic.html" method="post"> 
+      <div class="form-row">
+        <div class="input-group">
+          <label for="song-name">歌曲名稱</label>
+          <input type="text" id="song-name" placeholder="輸入歌曲名稱">
+        </div>
+        <div class="input-group">
+          <label for="artist-name">歌手名稱</label>
+          <input type="text" id="artist-name" placeholder="輸入歌手名稱">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="input-group" style="width: 100%;">
+          <label for="song-file">歌曲檔案</label>
+          <input type="text" id="song-file" placeholder="輸入歌曲網址">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="input-group" style="width: 100%;">
+          <label for="cover-file">封面檔案</label>
+          <input type="file" id="cover-file" accept="image/*">
+        </div>
+      </div>
+      <div class="form-row-btn">
+        <button class="btn">上傳音樂</button>
+        <button class="btn">返回歌曲</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

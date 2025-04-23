@@ -14,6 +14,7 @@ class User extends Model
     public $username = '';
     public $email = '';
     public $password = '';
+    public $role;
     public $verified_at = null;
 
     //register
@@ -56,6 +57,7 @@ class User extends Model
             $user->member_id = $row['Member_Id'];
             $user->username = $row['Username'];
             $user->email = $row['Email'];
+            $user->role = $row['Role'];
 
             return $user;
         }

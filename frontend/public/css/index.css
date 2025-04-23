@@ -7,8 +7,43 @@ body{
     margin: 0;
     display: flex;
 }
+.main{
+    padding: 40px 0px;
+}
 
-
+.title {
+    font-size: 24px;
+    color: white;
+    background-color: #2c2c3e;
+    height: 70px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    width: 100%;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 4;
+}
+.titleh2{
+    color: white;
+    margin-top: 0px;
+}
+.left{
+    margin:0 15px;
+}
+.title-user {
+    display: flex;
+    border-radius: 50px;
+    background-color: #44445a;
+    width: 50px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin-right:15px;
+}
 .head {
     height: 100vh; 
     position: fixed;

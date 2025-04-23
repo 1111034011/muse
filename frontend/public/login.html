@@ -15,7 +15,7 @@
 
 
         body {
-            background-color: #C2D2E8;
+            background-color: #141414;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -204,11 +204,16 @@
                 span.innerText = message;
                 div.appendChild(span);
                 if (body.success) {
-                    window.location.href = 'index.html';
-                } else {
-                    errorMessage.innerText = body.error || '登入失敗，請稍後再試';
-                }
-            })
+                    if (body.role === 'admin') {
+                        window.location.href = 'backstage_js.html';
+                    } else if (body.role === 'member') {
+                        // window.location.href = 'index.php';
+                        window.location.href = 'choicepeople.html';
+                    } 
+                }else {
+                        errorMessage.innerText = body.error || '登入失敗，請稍後再試';
+                    }
+                })
             .catch(error => {
                 console.error("Fetch Error:", error);
                 alert("無法連接到伺服器，請稍後再試");

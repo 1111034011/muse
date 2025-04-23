@@ -54,7 +54,9 @@ class SubUserController extends Controller
         try {
             $sub_user = new SubUser();
             $sub_users = $sub_user->findByMemberId($parsed_token->sub);
-            return ['data' => $sub_users];
+            // return ['data' => $sub_users];
+            return ['success' => true, 'users' => $sub_users];
+
         } catch (Exception $e) {
             return ['error' => '獲取列表失敗', 'detail' => $e->getMessage()];
         }
