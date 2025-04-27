@@ -119,13 +119,6 @@ class User extends Model
         $stmt = $db->prepare($sql);
 
         return $stmt->execute($params);
-        // $sql = "UPDATE member SET Password = :password WHERE Member_Id = :member_id";
-        // $stmt = $db->prepare($sql);
-
-        // $stmt->bindParam(':member_id', $this->member_id);
-        // $stmt->bindParam(':password', $this->password);
-
-        // return $stmt->execute();
     }
 
     public static function findById(string $member_id)
@@ -186,5 +179,15 @@ class User extends Model
         $stmt->bindParam(':password', $this->password);
 
         return $stmt->execute();
+    }
+
+    public function getAllMembers()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT Member_Id, Username, Email FROM member";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        // dump($stmt);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

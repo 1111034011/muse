@@ -24,7 +24,7 @@
           <img src="img/Search 02.png" alt="搜尋" />
         </button>
       </div>
-      <select>
+      <!-- <select>
         <option value="">篩選</option>
         <option value="pop">流行</option>
         <option value="rock">搖滾</option>
@@ -37,10 +37,10 @@
         <option value="reggae">雷鬼</option>
         <option value="rnb">R&B</option>
 
-      </select>
+      </select> -->
       <a href="Back_UploadMusic.html" class="upload">上傳音樂</a>
     </div>
-    <div class="song-list">
+    <div class="song-list" id="musicContainer">
       <div class="song-head">
         <span class="item-name">歌曲名稱</span>
         <div style="width: 50px;"></div>
@@ -54,50 +54,112 @@
       <div class="song-item">
         <img src="img/SING.jpg">
         <span class="item-name">歌曲名稱1</span>
-        <span class="item-limit">限制</span>
+        <!-- <span class="item-limit">限制</span> -->
         <span class="item-author">作者</span>
         <span class="item-type">流行</span>
-        <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
-        <button class="btn-delete">刪除</button>
-      </div>
-      <div class="song-item">
-        <img src="img/SING.jpg">
-        <span class="item-name">歌曲名稱2</span>
-        <span class="item-limit">一般</span>
-        <span class="item-author">作者</span>
-        <span class="item-type">電子</span>
-        <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
-        <button class="btn-delete">刪除</button>
-      </div>
-      <div class="song-item">
-        <img src="img/SING.jpg">
-        <span class="item-name">歌曲名稱3</span>
-        <span class="item-limit">一般</span>
-        <span class="item-author">作者</span>
-        <span class="item-type">搖滾</span>
-        <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
-        <button class="btn-delete">刪除</button>
-      </div>
-      <div class="song-item">
-        <img src="img/SING.jpg">
-        <span class="item-name">歌曲名稱4</span>
-        <span class="item-limit">限制</span>
-        <span class="item-author">作者</span>
-        <span class="item-type">雷鬼</span>
-        <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
-        <button class="btn-delete">刪除</button>
-      </div>
-      <div class="song-item">
-        <img src="img/SING.jpg">
-        <span class="item-name">歌曲名稱5</span>
-        <span class="item-limit">一般</span>
-        <span class="item-author">作者</span>
-        <span class="item-type">電子</span>
         <a href="Back_EditMusic.html" class="btn-edit">編輯</a>
         <button class="btn-delete">刪除</button>
       </div>
     </div>
   </div>
 </body>
+
+<script>
+  const token = localStorage.getItem('token');
+
+  const member_data = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/Backstage/musiclist", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      console.log("API 回傳的物件：", data);
+
+      console.log(JSON.stringify(data));
+
+      renderUsers(data);
+
+      return data;
+
+    } catch (error) {
+      console.error("錯誤：", error);
+    }
+  };
+
+  function renderUsers(data) {
+    if (data && data.success && Array.isArray(data.music)) {
+      const container = document.getElementById('musicContainer');
+      container.innerHTML = `
+    <div class="song-head">
+        <span class="item-name">歌曲名稱</span>
+        <div style="width: 50px;"></div>
+        
+        <span class="item-author">作者</span>
+        <span class="item-type">類型</span>
+        <span>操作</span>
+      </div>
+    `;
+    // <span class="item-limit">限制</span>
+
+      data.music.forEach(music => {
+        const userItem = document.createElement('div');
+        userItem.className = 'song-item';
+
+        userItem.innerHTML = `
+      <img src="img/SING.jpg" alt="封面圖" />
+        <span class="item-name">${music.Music_Name}</span>
+        
+        <span class="item-author">${music.Artist}</span>
+        <span class="item-type">${music.Tag_Name}</span>
+        <a href="Back_EditMusic.html?music_id=${music.Music_Id}" class="btn-edit">編輯</a>
+        <button class="btn-delete" onclick="deleteMusic('${music.Music_Id}')">刪除</button>
+    `;
+    // <span class="item-limit">無</span> 
+
+        container.appendChild(userItem);
+      });
+
+      console.log(`已渲染 ${data.music.length} 個用戶資料到頁面`);
+    } else {
+      console.error("API 返回的數據格式不符合預期:", data);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    member_data();
+  });
+
+  // function deleteMusic(musicId) {
+  //   if (!confirm("確定要刪除這首歌嗎？")) return;
+
+  //   fetch(`http://localhost:8000/api/Backstage/music/delete/${musicId}`, {
+  //     method: 'DELETE',
+  //     headers: {
+  //       'Authorization': 'Bearer ' + token,
+  //       'Content-Type': 'application/json',
+  //     }
+  //   })
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       if (data.success) {
+  //         alert("刪除成功！");
+  //         member_data(); // 重新載入資料
+  //       } else {
+  //         alert("刪除失敗：" + data.message);
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error("刪除時發生錯誤：", error);
+  //     });
+  // }
+
+</script>
+
 
 </html>

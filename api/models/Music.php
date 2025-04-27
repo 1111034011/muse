@@ -1,0 +1,101 @@
+<?php
+namespace project\models;
+
+use project\models\Model;
+use project\core\Database;
+use app\core\Application;
+use PDO;
+use PDOException;
+
+class Music extends Model
+{
+    private static $table = 'music';
+    public $music_id = '';
+    public $music_name = '';
+    public $artist = '';
+    public $music_url = '';
+
+    public function musicinsert()
+    {
+        $db = Database::getConnection();
+
+        $sql = "INSERT INTO music (Music_Name, Artist, Music_Url) VALUES (:music_name, :artist, :music_url)";
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam(':music_name', $this->music_name);
+        $stmt->bindParam(':artist', $this->artist);
+        $stmt->bindParam(':music_url', $this->music_url);
+
+        return $stmt->execute();
+    }
+
+    public function getAllMusic()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT m.Music_Name, m.Artist, mt.Tag_Name 
+                FROM music AS m
+                LEFT JOIN music_tag AS mt ON m.Tag_Id = mt.Tag_Id
+                ";
+        // $sql = "SELECT m.Music_Name, m.Artist, mt.Tag_Name FROM music as m, music_tag as mt WHERE m.Tag_Id = mt.Tag_Id";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateMusic($music_id, $music_name, $artist, $music_url, $tag_id)
+    {
+        $db = Database::getConnection();
+        $sql = "UPDATE music 
+            SET Music_Name = :music_name, 
+                Artist = :artist, 
+                Music_Url = :music_url, 
+                Tag_Id = :tag_id 
+            WHERE Music_Id = :music_id";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':music_name', $music_name);
+        $stmt->bindParam(':artist', $artist);
+        $stmt->bindParam(':music_url', $music_url);
+        $stmt->bindParam(':tag_id', $tag_id);
+        $stmt->bindParam(':music_id', $music_id);
+
+        return $stmt->execute();
+    }
+
+    public function tagExists($tag_id)
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT COUNT(*) FROM music_tag WHERE Tag_Id = :tag_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':tag_id', $tag_id);
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function getMusicById($music_id)
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT Music_Id, Music_Name, Artist, Music_Url, Tag_Id FROM music WHERE Music_Id = :music_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':music_id', $music_id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+}
+
+class MusicTag extends Model
+{
+    private static $table = 'music_tag';
+    public $tag_id = '';
+    public $tag_name = '';
+
+    public function getAllTags()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT * FROM music_tag";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}

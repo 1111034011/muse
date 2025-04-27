@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MB人員管理</title>
   <link rel="stylesheet" href="css/back.css">
   <link rel="stylesheet" href="css/backpeople.css">
-<script src="js/side.js"></script>
+  <script src="js/side.js"></script>
 </head>
 
 <body>
@@ -24,28 +25,81 @@
         </button>
       </div>
     </div>
-    <div class="user-list">
+    <div class="user-list" id="userContainer">
       <div class="user-head">
+        <span>使用者ID</span>
         <span>使用者名</span>
         <span>郵件</span>
-        <span>註冊日期</span>
-    </div>
-      <div class="user-item">
-          <span>用戶名稱1</span>
-          <span>abc1@mail.com</span>
-          <span>2024/09/25</span>
       </div>
       <div class="user-item">
-        <span>用戶名稱2</span>
-        <span>abc2@mail.com</span>
-        <span>2024/09/26</span>
+
       </div>
-      <div class="user-item">
-        <span>用戶名稱3</span>
-        <span>abc3@mail.com</span>
-        <span>2024/09/27</span>
-        
     </div>
   </div>
 </body>
+
+<script>
+
+  const token = localStorage.getItem('token');
+
+  const member_data = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/Backstage/memeberlist", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      console.log("API 回傳的物件：", data);
+
+      console.log(JSON.stringify(data));
+      renderUsers(data);
+
+      return data;
+
+    } catch (error) {
+      console.error("錯誤：", error);
+    }
+  };
+
+  function renderUsers(data) {
+    if (data && data.success && Array.isArray(data.users)) {
+      const container = document.getElementById('userContainer');
+
+      container.innerHTML = `
+      <div class="user-head">
+        <span>使用者ID</span>
+        <span>使用者名</span>
+        <span>郵件</span>
+      </div>
+      `;
+
+      data.users.forEach(user => {
+        const userItem = document.createElement('div');
+        userItem.className = 'user-item';
+
+        userItem.innerHTML = `
+        <span>${user.Member_Id}</span>
+        <span>${user.Username}</span>
+        <span>${user.Email}</span>
+      `;
+
+        container.appendChild(userItem);
+      });
+
+      console.log(`已渲染 ${data.users.length} 個用戶資料到頁面`);
+    } else {
+      console.error("API 返回的數據格式不符合預期:", data);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    member_data();
+  });
+</script>
+
 </html>

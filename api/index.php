@@ -11,6 +11,7 @@ use Dotenv\Dotenv;
 use project\controllers\LoginController;
 use project\core\Application;
 use project\controllers\SubUserController;
+use project\controllers\BackstageController;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -51,6 +52,11 @@ $app->router->post('/api/Login/changePassword', [LoginController::class, 'change
 // $app->router->get('/api/Login/loginPinnum', [LoginController::class, 'loginPinnum']);
 $app->router->post('/api/Login/forgetpwd', [LoginController::class, 'forgetpwd']);
 $app->router->post('/api/Login/resetpwd', [LoginController::class, 'resetpwd']);
+
+$app->router->get('/api/Backstage/memeberlist', [BackstageController::class, 'memeberlist']);
+$app->router->get('/api/Backstage/musiclist', [BackstageController::class, 'musiclist']);
+$app->router->post('/api/Backstage/insert', [BackstageController::class, 'insert']);
+$app->router->post('/api/Backstage/update', [BackstageController::class, 'update']);
 
 
 

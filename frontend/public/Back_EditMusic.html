@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8" />
   <title>MB-編輯音樂</title>
@@ -8,6 +9,7 @@
   <link rel="stylesheet" href="css/back_editmusic.css">
   <script src="js/side.js"></script>
 </head>
+
 <body>
   <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
   <!-- 這個 div 用來插入側邊欄 -->
@@ -18,7 +20,7 @@
 
   <!-- 主內容 -->
   <div class="main">
-    <form class="music-edit-form" action="Backmusic.html" method="post">
+    <form id="editMusicForm" class="music-edit-form" action="Backmusic.html" method="post">
       <div class="form-row">
         <div class="input-group">
           <label for="song-name">歌曲名稱</label>
@@ -31,7 +33,7 @@
       </div>
 
       <div class="form-row">
-        <div class="input-group">
+        <div class="input-group" style="width: 100%;">
           <label for="song-type">類型</label>
           <select id="song-type">
             <option value="" disabled selected>選擇歌曲類型</option>
@@ -47,29 +49,29 @@
             <option value="rnb">R&B</option>
           </select>
         </div>
-        <div class="input-group">
+        <!-- <div class="input-group">
           <label for="restriction"disabled selected>限制</label>
           <select id="restriction">
             <option value="">選擇輸入限制</option>
             <option value="pop">普通</option>
             <option value="rock">限制</option>
           </select>
-        </div>
+        </div> -->
       </div>
 
       <div class="form-row">
-        <div class="input-group" style="width: 100%;"> 
+        <div class="input-group" style="width: 100%;">
           <label for="song-file">歌曲檔案</label>
           <input type="text" id="song-file" placeholder="輸入歌曲網址">
         </div>
       </div>
 
-      <div class="form-row">
+      <!-- <div class="form-row">
         <div class="input-group" style="width: 100%;">
           <label for="cover-file">封面檔案</label>
           <input type="file" id="cover-file" accept="image/*">
         </div>
-      </div>
+      </div> -->
 
       <div class="form-row-btn">
         <button class="btn">編輯音樂</button>
@@ -78,4 +80,55 @@
     </form>
   </div>
 </body>
+
+<script>
+  document.getElementById('editMusicForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    update();
+  });
+  const update = () => {
+    const formData = {
+      music_name: document.getElementById('music_name').value,
+      artist: document.getElementById('artist').value,
+      music_url: document.getElementById('music_url').value,
+      tag_id: document.getElementById('tag_id').value
+    };
+
+    const data = JSON.stringify(formData)
+    console.log(JSON.stringify(formData));
+    fetch("http://localhost:8000/api/Backstage/update", {
+      // 設定為 POST 請求
+      method: 'post',
+      credentials: 'include',
+      // 在 headers 加入 json 格式
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+      // 傳送內容須轉換為字串
+      body: data,
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok ' + res.statusText);
+        }
+        return res.json();
+      })
+      .then(body => {
+        console.log(body);
+        const div = document.getElementById('editMusicForm');
+        div.innerHTML = '';
+        const message = body.success || body.error || '未知錯誤';
+        const span = document.createElement('span');
+        span.innerText = message;
+        div.appendChild(span);
+      })
+
+      .catch(error => {
+        console.error("Fetch Error:", error);
+        alert("請求失敗，請檢查 API 是否運行！");
+      });
+  };
+</script>
+
 </html>

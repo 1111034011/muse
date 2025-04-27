@@ -161,10 +161,8 @@
                         window.location.href = 'index.html';//sub_member_id=${user.sub_member_id}
                     });
                     document.getElementById('userContainer').appendChild(userCard);
-
                     document.getElementById('username').value = '';
                     document.getElementById('pin_num').value = '';
-
                     document.getElementById('userModal').style.display = 'none';
                 } else {
                     alert(body.error || '新增失敗，請稍後再試');
@@ -198,7 +196,7 @@
                         userCard.className = 'user-card';
                         userCard.innerText = user.username;  // 顯示姓名
                         userCard.addEventListener('click', () => {
-                            window.location.href = 'index.php';//?sub_member_id=${user.sub_member_id}
+                            window.location.href = 'index.html';//?sub_member_id=${user.sub_member_id}
                         });
                         container.appendChild(userCard);
                     });
