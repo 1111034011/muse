@@ -84,7 +84,15 @@ class Router
         $method = $this->request->getMethod();
 
         if ($method === 'OPTIONS') {
-            return $this->response->json();
+            // if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                header('Access-Control-Allow-Origin: http://127.0.0.1:5501');
+                header('Access-Control-Allow-Credentials: true');
+                header('Access-Control-Allow-Headers: Content-Type, Authorization');
+                header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
+                http_response_code(204); // No Content
+                exit; // 結束，避免繼續執行其他程式
+            // }
+            // return $this->response->json();
         }
 
         error_log("Resolving route: Method = $method, Path = $path");

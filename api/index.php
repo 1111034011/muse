@@ -22,7 +22,10 @@ $dotenv->load();
 
 $app = new Application();
 
-header('Access-Control-Allow-Origin:  http://127.0.0.1:5501'); // Replace with your frontend URL
+
+
+
+header('Access-Control-Allow-Origin: http://127.0.0.1:5501'); // Replace with your frontend URL
 header("Access-Control-Allow-Credentials: true");
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
@@ -56,7 +59,10 @@ $app->router->post('/api/Login/resetpwd', [LoginController::class, 'resetpwd']);
 $app->router->get('/api/Backstage/memeberlist', [BackstageController::class, 'memeberlist']);
 $app->router->get('/api/Backstage/musiclist', [BackstageController::class, 'musiclist']);
 $app->router->post('/api/Backstage/insert', [BackstageController::class, 'insert']);
-$app->router->post('/api/Backstage/update', [BackstageController::class, 'update']);
+$app->router->get('/api/Backstage/music/:id', [BackstageController::class, 'get']);
+$app->router->patch('/api/Backstage/music/:id', [BackstageController::class, 'update']);
+$app->router->delete('/api/Backstage/music/:id', [BackstageController::class, 'delete']);
+
 //TODO:前端接API，在Backstage_js.php
 $app->router->get('/api/Backstage/musiccount', [BackstageController::class, 'musiccount']);
 $app->router->get('/api/Backstage/membercount', [BackstageController::class, 'membercount']);

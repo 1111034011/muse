@@ -32,7 +32,7 @@ class Music extends Model
     public function getAllMusic()
     {
         $db = Database::getConnection();
-        $sql = "SELECT m.Music_Name, m.Artist, mt.Tag_Name 
+        $sql = "SELECT m.Music_Id, m.Music_Name, m.Artist, mt.Tag_Name 
                 FROM music AS m
                 LEFT JOIN music_tag AS mt ON m.Tag_Id = mt.Tag_Id
                 ";
@@ -48,7 +48,7 @@ class Music extends Model
         $sql = "SELECT COUNT(*) as count FROM music";
         $stmt = $db->prepare($sql);
         $stmt->execute();
-        return$stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
         // return $result['count'];
     }
 
@@ -67,6 +67,42 @@ class Music extends Model
         $stmt->bindParam(':artist', $artist);
         $stmt->bindParam(':music_url', $music_url);
         $stmt->bindParam(':tag_id', $tag_id);
+        $stmt->bindParam(':music_id', $music_id);
+
+        return $stmt->execute();
+    }
+
+    public function findById(string $music_id)
+    {
+        $db = Database::getConnection();
+
+        $sql = "SELECT Music_Id, Music_Name, Artist, Music_Url, Tag_Id FROM music WHERE Music_Id = :music_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':music_id', $music_id);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return null;
+        }
+
+        $music = new Music();
+        $music->music_id = $row['Music_Id'];
+        $music->music_name = $row['Music_Name'];
+        $music->artist = $row['Artist'];
+        $music->music_url = $row['Music_Url'];
+        $music->tag_id = $row['Tag_Id'];
+
+        return $music;
+    }
+
+    public function delete(string $music_id)
+    {
+        $db = Database::getConnection();
+
+        $sql = "DELETE FROM music WHERE Music_Id = :music_id";
+        $stmt = $db->prepare($sql);
         $stmt->bindParam(':music_id', $music_id);
 
         return $stmt->execute();
@@ -98,6 +134,19 @@ class Music extends Model
         $sql = "DELETE FROM music WHERE Music_Id = :music_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':music_id', $music_id);
+        return $stmt->execute();
+    }
+
+    public function addlist()
+    {
+        $db = Database::getConnection();
+
+        $sql = "INSERT INTO Playlist_music (Playlist_Id, Music_Id) VALUES (:playlist_id, :music_id)";
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam(':playlist_id', $this->music_name);
+        $stmt->bindParam(':music_id', $this->artist);
+
         return $stmt->execute();
     }
 }

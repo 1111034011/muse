@@ -10,7 +10,7 @@
     <script src="js/front_side.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>歌單 </title>
-        
+
 </head>
 
 <body>
@@ -24,73 +24,173 @@
         <div class="main">
             <div class="header">
                 <h2 class="title">歌單</h2>
-                <button class="save-btn" onclick="openModal()">新增</button>
+                <button class="save-btn" id="addListBtn" onclick="openModal()">新增</button>
             </div>
 
-            <div class="container" id="playlistContainer"></div>
-
-            <!-- 彈窗 -->
+            <div class="container" id="playlistContainer">
+                <div class="user-card">Alice</div>
+            </div>
+        </div>
+        <!-- 彈窗 -->
+        <form id="addForm" method="POST"> 
             <div id="addPlaylistModal" class="modal">
                 <div class="modal-content">
                     <h3>新增歌單</h3>
-                    <input type="text" id="playlistName" placeholder="輸入歌單名稱">
+                    <input type="text" id="listName" placeholder="輸入歌單名稱">
                     <br>
-                    <button onclick="confirmAddPlaylist()">確認新增</button>
+                    <button type="submit" id="confirmAddUser" onclick="confirmAddPlaylist()">確認新增</button>
                     <button onclick="closeModal()">取消</button>
                 </div>
             </div>
-        </div>
+        </form>
+
     </div>
 
     <script>
-        const playlistData = [
-            { name: "喜歡的歌", image: "img/1.webp" },
-            { name: "運動撥放清單", image: "img/APT..jpg" },
-            { name: "讀書歌單", image: "img/Strategy.jpg" },
-            { name: "睡前聽", image: "img/ReallyLikeYou.jpg" },
-        ];
+        // const playlistData = [
+        //     { name: "喜歡的歌", image: "img/1.webp" },
+        //     { name: "運動撥放清單", image: "img/APT..jpg" },
+        //     { name: "讀書歌單", image: "img/Strategy.jpg" },
+        //     { name: "睡前聽", image: "img/ReallyLikeYou.jpg" },
+        // ];
 
-        // 加載歌單
-        function loadPlaylists() {
-            const container = document.getElementById("playlistContainer");
-            container.innerHTML = "";
-            playlistData.forEach(playlist => {
-                const div = document.createElement("div");
-                div.className = "playlist";
-                div.innerHTML = `
-                    <img src="${playlist.image}" alt="${playlist.name}">
-                    <p>${playlist.name}</p>
-                `;
-                container.appendChild(div);
-            });
-        }
+        // // 加載歌單
+        // function loadPlaylists() {
+        //     const container = document.getElementById("playlistContainer");
+        //     container.innerHTML = "";
+        //     playlistData.forEach(playlist => {
+        //         const div = document.createElement("div");
+        //         div.className = "playlist";
+        //         div.innerHTML = `
+        //             <img src="${playlist.image}" alt="${playlist.name}">
+        //             <p>${playlist.name}</p>
+        //         `;
+        //         container.appendChild(div);
+        //     });
+        // }
 
-        // 打開彈窗
-        function openModal() {
-            document.getElementById("addPlaylistModal").style.display = "flex";
-        }
+        // // 打開彈窗
+        // function openModal() {
+        //     document.getElementById("addPlaylistModal").style.display = "flex";
+        // }
 
         // 關閉彈窗
         function closeModal() {
             document.getElementById("addPlaylistModal").style.display = "none";
         }
 
-        // 確認新增歌單
-        function confirmAddPlaylist() {
-            const playlistName = document.getElementById("playlistName").value.trim();
-            if (!playlistName) {
-                alert("請輸入歌單名稱！");
+        // // 確認新增歌單
+        // function confirmAddPlaylist() {
+        //     const playlistName = document.getElementById("playlistName").value.trim();
+        //     if (!playlistName) {
+        //         alert("請輸入歌單名稱！");
+        //         return;
+        //     }
+        //     playlistData.push({ name: playlistName, image: "img/1.webp" });
+        //     closeModal();
+        //     loadPlaylists();
+        // }
+
+        // // 初始化
+        // window.onload = function () {
+        //     document.getElementById("addPlaylistModal").style.display = "none";
+        //     loadPlaylists();
+        // };
+
+
+        document.getElementById('addListBtn').addEventListener('click', () => {
+            document.getElementById('userModal').style.display = 'flex';
+        });
+
+        document.getElementById('addForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            create();
+        });
+
+        const create = () => {
+            const formData = {
+                listname: document.getElementById('listname').value.trim()
+            };
+
+            if (!formData.listname) {
+                errorMessage.innerText = '請輸入歌單名稱！';
                 return;
             }
-            playlistData.push({ name: playlistName, image: "img/1.webp" });
-            closeModal();
-            loadPlaylists();
-        }
 
-        // 初始化
+            const data = JSON.stringify(formData);
+            console.log(JSON.stringify(formData));
+
+            fetch("http://localhost:8000/api/sub-users", {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: data,
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok: ' + res.statusText);
+                    }
+                    return res.json();
+                })
+                .then(body => {
+                    console.log(body);
+                    if (body.success) {
+                        const userCard = document.createElement('div');
+                        userCard.className = 'user-card';
+                        userCard.innerText = formData.listname;
+                        userCard.addEventListener('click', () => {
+                            window.location.href = 'index.html';//sub_member_id=${user.sub_member_id}
+                        });
+                        document.getElementById('playlistContainer').appendChild(userCard);
+                        document.getElementById('username').value = '';
+                        document.getElementById('userModal').style.display = 'none';
+                    } else {
+                        alert(body.error || '新增失敗，請稍後再試');
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch Error:", error);
+                    alert("無法連接到伺服器，請稍後再試");
+                });
+        };
+
         window.onload = function () {
-            document.getElementById("addPlaylistModal").style.display = "none";
-            loadPlaylists();
+            fetch("http://localhost:8000/api/sub-users", {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("伺服器回應錯誤：" + res.statusText);
+                    return res.json();
+                })
+                .then(body => {
+                    console.log(body);
+                    if (Array.isArray(body.users)) {
+                        const container = document.getElementById('playlistContainer');
+                        container.innerHTML = ''; // 先清空
+                        body.users.forEach(user => {
+                            const userCard = document.createElement('div');
+                            userCard.className = 'user-card';
+                            userCard.innerText = user.listname;  // 顯示姓名
+                            userCard.addEventListener('click', () => {
+                                window.location.href = 'index.html';//?sub_member_id=${user.sub_member_id}
+                            });
+                            container.appendChild(userCard);
+                        });
+                    } else {
+                        alert(body.error || '無法取得使用者列表');
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch 使用者列表錯誤：", error);
+                    alert("無法連接到伺服器！");
+                });
         };
     </script>
 </body>

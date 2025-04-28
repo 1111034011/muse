@@ -113,6 +113,7 @@
 
         userItem.innerHTML = `
       <img src="img/SING.jpg" alt="封面圖" />
+
         <span class="item-name">${music.Music_Name}</span>
         
         <span class="item-author">${music.Artist}</span>
@@ -135,29 +136,29 @@
     member_data();
   });
 
-  // function deleteMusic(musicId) {
-  //   if (!confirm("確定要刪除這首歌嗎？")) return;
+  function deleteMusic(musicId) {
+    if (!confirm("確定要刪除這首歌嗎？")) return;
 
-  //   fetch(`http://localhost:8000/api/Backstage/music/delete/${musicId}`, {
-  //     method: 'DELETE',
-  //     headers: {
-  //       'Authorization': 'Bearer ' + token,
-  //       'Content-Type': 'application/json',
-  //     }
-  //   })
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       if (data.success) {
-  //         alert("刪除成功！");
-  //         member_data(); // 重新載入資料
-  //       } else {
-  //         alert("刪除失敗：" + data.message);
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error("刪除時發生錯誤：", error);
-  //     });
-  // }
+    fetch(`http://localhost:8000/api/Backstage/music/${musicId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("刪除成功！");
+          member_data(); // 重新載入資料
+        } else {
+          alert("刪除失敗：" + data.message);
+        }
+      })
+      .catch(error => {
+        console.error("刪除時發生錯誤：", error);
+      });
+  }
 
 </script>
 

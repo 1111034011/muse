@@ -68,7 +68,7 @@ class LoginController
     public function sendVerificationEmail(Request $request)
     {
         $email = $request->body()['email'] ?? null;
-        $redirect_url = $request->body()['redirect_url'] ?? 'http://127.0.0.1:5501/frontend/public/index.html';
+        $redirect_url = $request->body()['redirect_url'] ?? null;
 
         if (empty($email)) {
             return ['error' => '所有欄位都是必填的'];
@@ -87,7 +87,7 @@ class LoginController
         $payload = [
             'sub' => $user->member_id,
             'iat' => time(),
-            'exp' => time() + 3600*24*7, // 7 days
+            'exp' => time() + 3600*24, // 1 days
         ];
 
         $token = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
@@ -114,7 +114,7 @@ class LoginController
     public function verify(Request $request)
     {
         $token = $request->query()['token'] ?? null;
-        $redirect_url = $request->query()['redirect_url'] ?? 'http://127.0.0.1:5501/frontend/public/index.html';
+        $redirect_url = $request->query()['redirect_url'] ?? null;
 
         if (empty($token)) {
             return ['error' => '無效的驗證連結'];
@@ -160,7 +160,7 @@ class LoginController
         $payload = [
             'sub' => $user->member_id,
             'iat' => time(),
-            'exp' => time() + 3600, // 1 hour
+            'exp' => time() + 3600*24*7, // 7days
             'role' => $user->role, // TODO: Add role
         ];
 

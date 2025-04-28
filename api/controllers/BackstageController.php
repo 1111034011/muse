@@ -43,35 +43,81 @@ class BackstageController extends Controller
     }
 
     public function update(Request $request)
-    {
-        $music_id = $request->body()['music_id'] ?? null;
+    {   
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return ['error' => '未登入，請先登入'];
+        }
+
+        $music_id = $request->getParam('id');
         $music_name = $request->body()['music_name'] ?? null;
         $artist = $request->body()['artist'] ?? null;
         $music_url = $request->body()['music_url'] ?? null;
         $tag_id = $request->body()['tag_id'] ?? null;
 
-        if (empty($music_id))
-            return ['error' => '音樂ID是必填的'];
         if (empty($music_name))
             return ['error' => '音樂名稱是必填的'];
         if (empty($artist))
             return ['error' => '歌手名稱是必填的'];
         if (empty($music_url))
             return ['error' => '音樂網址是必填的'];
-        if (empty($tag_id))
-            return ['error' => '標籤ID是必填的'];
+        // if (empty($tag_id))
+        //     return ['error' => '標籤ID是必填的'];
 
         try {
             $musicModel = new Music();
 
-            if (!$musicModel->tagExists($tag_id)) {
-                return ['error' => '標籤ID不存在，請確認標籤是否正確'];
-            }
+            // if (!$musicModel->tagExists($tag_id)) {
+            //     return ['error' => '標籤ID不存在，請確認標籤是否正確'];
+            // }
 
             $musicModel->updateMusic($music_id, $music_name, $artist, $music_url, $tag_id);
             return ['success' => '更新成功'];
         } catch (Exception $e) {
             return ['error' => '更新失敗，請稍後再試', 'detail' => $e->getMessage()];
+        }
+    }
+
+    public function get(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return ['error' => '未登入，請先登入'];
+        }
+
+        $music_id = $request->getParam('id');
+
+        $music = new Music();
+        $current_music = $music->findById($music_id);
+
+        if (!$current_music) {
+            return ['error' => '找不到音樂'];
+        }
+        
+        return ['data' => $current_music];
+    }
+
+    public function delete(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return ['error' => '未登入，請先登入'];
+        }
+
+        $music_id = $request->getParam('id');
+
+        $music = new Music();
+        $current_music = $music->findById($music_id);
+
+        if (!$current_music) {
+            return ['error' => '找不到使用者'];
+        }
+
+        try {
+            $music->delete($music_id);
+            return ['success' => '刪除成功'];
+        } catch (Exception $e) {
+            return ['error' => '刪除失敗', 'detail' => $e->getMessage()];
         }
     }
 

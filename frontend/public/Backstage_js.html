@@ -50,4 +50,62 @@
   </div>
 </body>
 
+<script>
+  const token = localStorage.getItem('token');
+
+  const member_data = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/Backstage/musiclist", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      console.log("API 回傳的物件：", data);
+
+      if (data && data.success && Array.isArray(data.music)) {
+        renderHotTracks(data.music); // 呼叫新的渲染函式
+      } else {
+        console.error("API 返回的數據格式不符合預期:", data);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("錯誤：", error);
+    }
+  };
+
+  function renderHotTracks(musicData) {
+    if (!Array.isArray(musicData) || musicData.length === 0) {
+      console.error("沒有歌曲數據可以呈現");
+      return;
+    }
+
+    const hotTracksContainer = document.querySelector('.hot-tracks');
+    hotTracksContainer.innerHTML = ''; // 清空原本的假資料
+
+    const topThreeSongs = musicData.slice(0, 3);
+
+    topThreeSongs.forEach((song, index) => {
+      const trackDiv = document.createElement('div');
+      trackDiv.className = 'hot-track';
+      trackDiv.innerHTML = `<strong>Top ${index + 1}</strong> - ${song.Music_Name || `第${index + 1}名歌曲`}`;
+      trackDiv.onclick = () => {
+        location.href = `music.html?id=${song.Music_ID}`;
+      };
+      hotTracksContainer.appendChild(trackDiv);
+    });
+
+    console.log(`已更新前${topThreeSongs.length}首熱門歌曲`);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    member_data();
+  });
+</script>
+
+
 </html>

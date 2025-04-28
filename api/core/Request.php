@@ -53,7 +53,7 @@ class Request
         // $data = json_decode($inputJSON, TRUE); // 將 JSON 轉換為陣列
         // error_log("JSON Data: " . print_r($data, true)); // 除錯：檢查 JSON 資料
         // return $data;
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'PATCH') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'PATCH' || $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             $inputJSON = file_get_contents('php://input');
             return json_decode($inputJSON, true);
         }
