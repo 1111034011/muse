@@ -57,7 +57,13 @@ $app->router->get('/api/Backstage/memeberlist', [BackstageController::class, 'me
 $app->router->get('/api/Backstage/musiclist', [BackstageController::class, 'musiclist']);
 $app->router->post('/api/Backstage/insert', [BackstageController::class, 'insert']);
 $app->router->post('/api/Backstage/update', [BackstageController::class, 'update']);
+//TODO:前端接API，在Backstage_js.php
+$app->router->get('/api/Backstage/musiccount', [BackstageController::class, 'musiccount']);
+$app->router->get('/api/Backstage/membercount', [BackstageController::class, 'membercount']);
 
 
+
+$app->router->post('/api/PlayMusic/play', [PlayMusicController::class, 'playMusic']);
+$app->router->get('/api/SearchMusic/getData', [SearchMusicController::class, 'getPagedMusicData']);
 
 $app->run();

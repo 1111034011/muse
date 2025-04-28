@@ -61,7 +61,7 @@
                         <ul>
                             <li>
                                 <a href="music.html">
-                                    <div class="songs">
+                                    <div class="songs" id="musicContainer">
                                         <div class="songco">
                                             ROCKSTAR<br>
                                             <span>LISA </span><br>
@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="persontt">
-                        <h2>個性建議</h2>
+                        <h2>今日熱門2</h2>
                         <ul>
                             <li>
                                 <a href="music.html">
@@ -145,5 +145,110 @@
         </div>
     </div>
 </body>
+
+<script>
+    const token = localStorage.getItem('token');
+
+    const member_data = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/api/Backstage/musiclist", {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            console.log("API 回傳的物件：", data);
+
+            if (data && data.success && Array.isArray(data.music)) {
+                renderSongList(data.music);
+            } else {
+                console.error("API 返回的數據格式不符合預期:", data);
+            }
+
+            return data;
+        } catch (error) {
+            console.error("錯誤：", error);
+        }
+    };
+
+    function renderSongList(musicData) {
+        if (!Array.isArray(musicData) || musicData.length === 0) {
+            console.error("沒有歌曲數據可以呈現");
+            return;
+        }
+
+        const hotSongsList = document.querySelector('.hot ul');
+        hotSongsList.innerHTML = ''; 
+
+        const hotSongs = musicData.slice(0, Math.min(3, musicData.length));
+
+        hotSongs.forEach(music => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+            <a href="music.html?id=${music.Music_ID || ''}">
+                <div class="songs">
+                    <div class="songco">
+                        ${music.Music_Name}<br>
+                        <span>${music.Artist}</span><br>
+                        <span>${music.Tag_Name || '流行'}</span>
+                    </div>
+                    <button class="songtags" onclick="addToPlaylist(event, ${music.Music_ID})">加入歌單</button>
+                </div>
+            </a>
+        `;
+            hotSongsList.appendChild(listItem);
+        });
+
+        const personalSongsList = document.querySelector('.persontt ul');
+        personalSongsList.innerHTML = ''; 
+
+        let personalSongs = [];
+        if (musicData.length > 3) {
+            personalSongs = musicData.slice(3, 6); 
+        } else {
+            personalSongs = musicData.slice(0, Math.min(3, musicData.length)); 
+        }
+
+        personalSongs.forEach(music => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+            <a href="music.html?id=${music.Music_ID || ''}">
+                <div class="songs">
+                    <div class="songco">
+                        ${music.Music_Name}<br>
+                        <span>${music.Artist}</span><br>
+                        <span>${music.Tag_Name || '流行'}</span>
+                    </div>
+                    <button class="songtags" onclick="addToPlaylist(event, ${music.Music_ID})">加入歌單</button>
+                </div>
+            </a>
+        `;
+            personalSongsList.appendChild(listItem);
+        });
+
+        console.log(`已渲染共 ${hotSongs.length + personalSongs.length} 首歌曲到頁面`);
+    }
+
+    // 加入歌單功能
+    function addToPlaylist(event, musicId) {
+        event.preventDefault(); 
+        event.stopPropagation(); 
+
+        // 這裡添加將歌曲加入歌單的邏輯
+        console.log(`將音樂 ID: ${musicId} 加入歌單`);
+
+        // 如果有API可以呼叫，可以在這裡添加
+        // addToPlaylistAPI(musicId);
+
+        alert(`已將歌曲加入歌單！`);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        member_data();
+    });
+</script>
 
 </html>

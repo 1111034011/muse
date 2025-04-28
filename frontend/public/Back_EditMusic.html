@@ -21,21 +21,22 @@
   <!-- 主內容 -->
   <div class="main">
     <form id="editMusicForm" class="music-edit-form" action="Backmusic.html" method="post">
+      <input type="hidden" id="music-id">
       <div class="form-row">
         <div class="input-group">
           <label for="song-name">歌曲名稱</label>
-          <input type="text" id="song-name" placeholder="輸入歌曲名稱">
+          <input type="text" id="music_name" placeholder="輸入歌曲名稱">
         </div>
         <div class="input-group">
           <label for="artist-name">歌手名稱</label>
-          <input type="text" id="artist-name" placeholder="輸入歌手名稱">
+          <input type="text" id="artist" placeholder="輸入歌手名稱">
         </div>
       </div>
 
       <div class="form-row">
         <div class="input-group" style="width: 100%;">
           <label for="song-type">類型</label>
-          <select id="song-type">
+          <select id="tag_id">
             <option value="" disabled selected>選擇歌曲類型</option>
             <option value="pop">流行</option>
             <option value="rock">搖滾</option>
@@ -61,8 +62,8 @@
 
       <div class="form-row">
         <div class="input-group" style="width: 100%;">
-          <label for="song-file">歌曲檔案</label>
-          <input type="text" id="song-file" placeholder="輸入歌曲網址">
+          <label for="song-file">歌曲網址</label>
+          <input type="text" id="music_url" placeholder="輸入歌曲網址">
         </div>
       </div>
 
@@ -74,23 +75,60 @@
       </div> -->
 
       <div class="form-row-btn">
-        <button class="btn">編輯音樂</button>
-        <button class="btn">返回歌曲</button>
+        <button class="btn" type="submit" onclick="editMusic('音樂ID')">編輯音樂</button>
+        <button class="btn" type="button" onclick="window.location.href='Backmusic.html'">返回歌曲</button>
       </div>
     </form>
   </div>
 </body>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const musicId = urlParams.get('music_id');
+
+    if (!musicId) {
+      alert('缺少 music_id，請從歌曲列表正確點擊進入。');
+      window.location.href = 'Backmusic.html';
+      return;
+    }
+
+    document.getElementById('music-id').value = musicId;
+
+    fetch(`http://localhost:8000/api/Backstage/music/${musicId}`, {
+      method: 'get',
+      credentials: 'include'
+    })
+      .then(res => res.json())
+      .then(body => {
+        if (body.success && body.data) {
+          const music = body.data;
+          document.getElementById('music_name').value = music.music_name;
+          document.getElementById('artist').value = music.artist;
+          document.getElementById('music_url').value = music.music_url;
+          document.getElementById('tag_id').value = music.tag_id;
+        } else {
+          alert('載入失敗：' + (body.error || '未知錯誤'));
+          window.location.href = 'Backmusic.html';
+        }
+      })
+      .catch(error => {
+        console.error('Fetch Error:', error);
+        alert('連線失敗，請檢查伺服器。');
+      });
+  });
+
+
   document.getElementById('editMusicForm').addEventListener('submit', function (event) {
     event.preventDefault();
     update();
   });
   const update = () => {
     const formData = {
-      music_name: document.getElementById('music_name').value,
-      artist: document.getElementById('artist').value,
-      music_url: document.getElementById('music_url').value,
+      music_id: document.getElementById('music-id').value,
+      music_name: document.getElementById('music_name').value.trim(),
+      artist: document.getElementById('artist').value.trim(),
+      music_url: document.getElementById('music_url').value.trim(),
       tag_id: document.getElementById('tag_id').value
     };
 

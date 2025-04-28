@@ -98,6 +98,28 @@ class BackstageController extends Controller
         }
     }
 
+    public function musiccount(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return json_encode(['error' => '未登入，請先登入'], 401);
+        }
+
+        try {
+            $musicModel = new Music();
+            $musicCount = $musicModel->countAllMusic();
+            return [
+                'success' => true,
+                'musicCount' => $musicCount
+            ];
+        } catch (Exception $e) {
+            return [
+                'error' => '獲取列表失敗',
+                'detail' => $e->getMessage()
+            ];
+        }
+    }
+
     public function memeberlist(Request $request)
     {
         $parsed_token = $this->verifyToken($request);
@@ -119,5 +141,28 @@ class BackstageController extends Controller
             ];
         }
     }
+
+    public function membercount(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return json_encode(['error' => '未登入，請先登入'], 401);
+        }
+
+        try {
+            $memberModel = new User();
+            $members = $memberModel->countAllMembers();
+            return [
+                'success' => true,
+                'users' => $members
+            ];
+        } catch (Exception $e) {
+            return [
+                'error' => '獲取列表失敗',
+                'detail' => $e->getMessage()
+            ];
+        }
+    }
+
 }
 

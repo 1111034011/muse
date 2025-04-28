@@ -42,6 +42,16 @@ class Music extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function countAllMusic()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT COUNT(*) as count FROM music";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return$stmt->fetchAll(PDO::FETCH_ASSOC);
+        // return $result['count'];
+    }
+
     public function updateMusic($music_id, $music_name, $artist, $music_url, $tag_id)
     {
         $db = Database::getConnection();
@@ -82,6 +92,14 @@ class Music extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function deleteMusic($music_id)
+    {
+        $db = Database::getConnection();
+        $sql = "DELETE FROM music WHERE Music_Id = :music_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':music_id', $music_id);
+        return $stmt->execute();
+    }
 }
 
 class MusicTag extends Model

@@ -190,4 +190,14 @@ class User extends Model
         // dump($stmt);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function countAllMembers()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT COUNT(*) as count FROM member";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return$stmt->fetchAll(PDO::FETCH_ASSOC);
+        // return $result['count'];
+    }
 }
