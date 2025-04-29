@@ -12,6 +12,7 @@ use project\controllers\LoginController;
 use project\core\Application;
 use project\controllers\SubUserController;
 use project\controllers\BackstageController;
+use project\controllers\MusicController;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -67,6 +68,12 @@ $app->router->delete('/api/Backstage/music/:id', [BackstageController::class, 'd
 $app->router->get('/api/Backstage/musiccount', [BackstageController::class, 'musiccount']);
 $app->router->get('/api/Backstage/membercount', [BackstageController::class, 'membercount']);
 
+$app->router->get('/api/Music/playlists', callback: [MusicController::class, 'list']);
+$app->router->post('/api/Music/playlists', callback: [MusicController::class, 'create']);
+
+
+
+$app->router->post('/api/Music/addmusictolist', [MusicController::class, 'addmusictolist']);
 
 
 $app->router->post('/api/PlayMusic/play', [PlayMusicController::class, 'playMusic']);

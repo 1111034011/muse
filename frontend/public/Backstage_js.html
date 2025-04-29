@@ -64,17 +64,84 @@
       });
 
       const data = await response.json();
-      console.log("API 回傳的物件：", data);
+      console.log("API 回傳的物件（歌曲列表）：", data);
 
       if (data && data.success && Array.isArray(data.music)) {
-        renderHotTracks(data.music); // 呼叫新的渲染函式
+        renderHotTracks(data.music);
       } else {
-        console.error("API 返回的數據格式不符合預期:", data);
+        console.error("API 返回的歌曲列表格式不符合預期:", data);
       }
 
-      return data;
     } catch (error) {
-      console.error("錯誤：", error);
+      console.error("錯誤（歌曲列表）:", error);
+    }
+  };
+
+  // 抓歌曲數量
+  const fetchMusicCount = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/Backstage/musiccount", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      console.log("API 回傳的物件（歌曲數量）：", data);
+
+      const cards = document.querySelectorAll('.dashboard-cards .card');
+      console.log("找到卡片：", cards);
+
+      if (data && data.success && Array.isArray(data.musicCount) && data.musicCount.length > 0) {
+        const count = data.musicCount[0].count;
+        if (typeof count === 'number') {
+          if (cards.length >= 1) {
+            cards[0].querySelector('p').textContent = count;
+          }
+        } else {
+          console.error("count 不是數字：", count);
+        }
+      } else {
+        console.error("API 返回的歌曲數量格式不正確:", data);
+      }
+
+    } catch (error) {
+      console.error("錯誤（歌曲數量）:", error);
+    }
+  };
+
+  const fetchMemberCount = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/Backstage/membercount", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      console.log("API 回傳的物件（會員數量）：", data);
+
+      const cards = document.querySelectorAll('.dashboard-cards .card');
+
+      if (data && data.success && Array.isArray(data.users) && data.users.length > 0) {
+        const count = data.users[0].count;
+        if (typeof count === 'number') {
+          if (cards.length >= 2) {
+            cards[1].querySelector('p').textContent = count;
+          }
+        } else {
+          console.error("count 不是數字：", count);
+        }
+      } else {
+        console.error("API 返回的會員數量格式不正確:", data);
+      }
+
+    } catch (error) {
+      console.error("錯誤（會員數量）:", error);
     }
   };
 
@@ -85,7 +152,7 @@
     }
 
     const hotTracksContainer = document.querySelector('.hot-tracks');
-    hotTracksContainer.innerHTML = ''; // 清空原本的假資料
+    hotTracksContainer.innerHTML = '';
 
     const topThreeSongs = musicData.slice(0, 3);
 
@@ -104,8 +171,9 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     member_data();
+    fetchMusicCount();
+    fetchMemberCount();
   });
 </script>
-
 
 </html>

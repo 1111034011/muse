@@ -10,67 +10,87 @@ use project\core\Request;
 use project\core\Response;
 use project\models\Backstage;
 use project\models\Music;
+use project\models\Playlist;
+use project\models\PlaylistMusic;
 use project\models\SubUser;
 use project\controllers\Controller;
 use project\models\User;
 
 class MusicController extends Controller
 {
-    // public function create(Request $request)
-    // {
-    //     $parsed_token = $this->verifyToken($request);
-    //     if (!$parsed_token) {
-    //         return ['error' => '未登入，請先登入'];
-    //     }
-
-    //     $listname = $request->body()['listname'] ?? null;
-
-    //     if (empty($listname))
-    //         return ['error' => '歌單名稱是必填的'];
-
-    //     $sub_user = new SubUser();
-    //     $existing_user = $sub_user->findByUsername($listname, $parsed_token->sub);
-    //     if ($existing_user) {
-    //         return ['error' => '此使用者名稱已被註冊'];
-    //     }
-
-    //     $sub_user->member_id = $parsed_token->sub;
-    //     $sub_user->username = $username;
-
-    //     try {
-    //         $sub_user->save();
-    //         return ['success' => '註冊成功'];
-    //     } catch (Exception $e) {
-    //         return ['error' => '註冊失敗，請稍後再試', 'detail' => $e->getMessage()];
-    //     }
-    // }
-
-    protected function addmusiclist(Request $request)
+    public function list(Request $request)
     {
-        $token = str_replace('Bearer ', '', $request->getHeader('Authorization'));
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return ['error' => '未登入，請先登入'];
+        }
+
         try {
-            return JWT::decode($token, new Key($_ENV['JWT_SECRET'], 'HS256'));
-        } catch (ExpiredException | Exception $e) {
-            return null;
+            $playlist = new Playlist();
+            $playlists = $playlist->findByMemberId($parsed_token->sub);
+            return ['success' => true, 'playlists' => $playlists];
+
+        } catch (Exception $e) {
+            return ['error' => '獲取列表失敗', 'detail' => $e->getMessage()];
+        }
+    }
+    //create list
+    public function create(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return ['error' => '未登入，請先登入'];
+        }
+
+        $name = $request->body()['name'] ?? null;
+
+        if (empty($name))
+            return ['error' => '歌單名稱是必填的'];
+
+        $playlist = new Playlist();
+        $existing_platlist = $playlist->findByPlaylistname($name, $parsed_token->sub);
+        if ($existing_platlist) {
+            return ['error' => '此清單名稱已被註冊'];
+        }
+
+        $playlist->member_id = $parsed_token->sub;
+        $playlist->name = $name;
+
+        try {
+            $playlist->save();
+            return ['success' => '註冊成功'];
+        } catch (Exception $e) {
+            return ['error' => '註冊失敗，請稍後再試', 'detail' => $e->getMessage()];
+        }
+    }
+
+
+    //add music to list
+    public function addmusictolist(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return ['error' => '未登入，請先登入'];
         }
 
         $playlist_id = $request->body()['playlist_id'] ?? null;
-        $artist = $request->body()['music_id'] ?? null;
+        $music_id = $request->body()['music_id'] ?? null;
 
-        if (empty($playlist_id))
-            return ['error' => '歌曲名稱是必填的'];
-        if (empty($music_id))
-            return ['error' => '歌手是必填的'];
 
-        $music = new Music();
-        $music->playlist_id = $playlist_id;
-        $music->music_id = $music_id;
+        $playlistmusic = new PlaylistMusic();
+        $existing_playlistmusic = $playlistmusic->findByMusicname($playlist_id, $music_id);
+        if ($existing_playlistmusic) {
+            return ['error' => '此歌曲已被加入清單'];
+        }
 
+        $playlistmusic->playlist_id = $playlist_id;
+        $playlistmusic->music_id = $music_id;
+        
         try {
-            $music->addlist();
-            return ['success' => '新增成功'];
+            $playlistmusic->save();
+            return ['success' => '註冊成功'];
         } catch (Exception $e) {
-            return ['error' => '新增失敗，請稍後再試', 'detail' => $e->getMessage()];
+            return ['error' => '註冊失敗，請稍後再試', 'detail' => $e->getMessage()];
         }
     }
 }
