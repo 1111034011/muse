@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="css/Backstage.css">
   <link rel="stylesheet" href="css/index.css" media="all" />
   <link rel="stylesheet" href="css/Sub-playlist.css" media="all" />
+  <!-- <link rel="stylesheet" href="../RWD_Front.css"/> -->
+  <link rel="icon" href="/front/img/SING.jpg">
   <script src="js/front_side.js"></script>
 </head>
 
@@ -21,10 +23,55 @@
       <h2 class="title" id="playlist-title">歌單</h2>
     </div>
 
-    <div class="song-list" id="song-list"></div>
+    <div class="song-list" id="song-list">
+      <div class="song-item" onclick="goToMusic('ROCKSTAR')">
+        <div class="song-info">
+          <img src="img/SING.jpg" alt="音樂">
+          <div class="song-text">
+            <strong>ROCKSTAR</strong><br>LISA<br>流行
+          </div>
+        </div>
+        <button class="add-button" onclick="event.stopPropagation(); deleteSong(this)">刪除歌單</button>
+      </div>
+
+      <div class="song-item" onclick="goToMusic('Really Like You')">
+        <div class="song-info">
+          <img src="img/SING.jpg" alt="音樂">
+          <div class="song-text">
+            <strong>Really Like You</strong><br>BABYMONSTER<br>流行
+          </div>
+        </div>
+        <button class="add-button" onclick="event.stopPropagation(); deleteSong(this)">刪除歌單</button>
+      </div>
+    </div>
   </div>
 
-  
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const playlistId = urlParams.get("playlistId");
+
+    // 設定標題
+    const titleElement = document.getElementById("playlist-title");
+    if (playlistNames[playlistId]) {
+      titleElement.textContent = playlistNames[playlistId];
+    } else {
+      titleElement.textContent = "您的歌單";
+    }
+
+    // 點歌跳轉
+    function goToMusic(songName) {
+      const encodedSongName = encodeURIComponent(songName);
+      window.location.href = `music.html?song=${encodedSongName}`;
+    }
+
+    // 刪除歌曲元素
+    function deleteSong(button) {
+      const songItem = button.closest(".song-item");
+      if (songItem) {
+        songItem.remove();
+      }
+    }
+  </script>
 </body>
 
 </html>

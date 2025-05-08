@@ -15,6 +15,7 @@ use project\models\PlaylistMusic;
 use project\models\SubUser;
 use project\controllers\Controller;
 use project\models\User;
+use project\models\MusicRanking;
 
 class MusicController extends Controller
 {
@@ -34,6 +35,7 @@ class MusicController extends Controller
             return ['error' => '獲取列表失敗', 'detail' => $e->getMessage()];
         }
     }
+
     //create list
     public function create(Request $request)
     {
@@ -64,33 +66,79 @@ class MusicController extends Controller
         }
     }
 
+    public function musiclist(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return json_encode(['error' => '未登入，請先登入'], 401);
+        }
+
+        try {
+
+            $musicModel = new Music();
+            $music = $musicModel->getAllMusic();
+            return [
+                'success' => true,
+                'music' => $music
+            ];
+        } catch (Exception $e) {
+            return [
+                'error' => '獲取列表失敗',
+                'detail' => $e->getMessage()
+            ];
+        }
+    }
 
     //add music to list
-    public function addmusictolist(Request $request)
+    // public function addmusictolist(Request $request)
+    // {
+    //     $parsed_token = $this->verifyToken($request);
+    //     if (!$parsed_token) {
+    //         return ['error' => '未登入，請先登入'];
+    //     }
+
+    //     $playlist_id = $request->body()['playlist_id'] ?? null;
+    //     $music_id = $request->body()['music_id'] ?? null;
+
+
+    //     $playlistmusic = new PlaylistMusic();
+    //     $existing_playlistmusic = $playlistmusic->findByMusicname($playlist_id, $music_id);
+    //     if ($existing_playlistmusic) {
+    //         return ['error' => '此歌曲已被加入清單'];
+    //     }
+
+    //     $playlistmusic->playlist_id = $playlist_id;
+    //     $playlistmusic->music_id = $music_id;
+
+    //     try {
+    //         $playlistmusic->save();
+    //         return ['success' => '註冊成功'];
+    //     } catch (Exception $e) {
+    //         return ['error' => '註冊失敗，請稍後再試', 'detail' => $e->getMessage()];
+    //     }
+    // }
+
+    public function musicplaycount(Request $request)
     {
         $parsed_token = $this->verifyToken($request);
         if (!$parsed_token) {
             return ['error' => '未登入，請先登入'];
         }
 
-        $playlist_id = $request->body()['playlist_id'] ?? null;
         $music_id = $request->body()['music_id'] ?? null;
+        // dd($music_id);
 
-
-        $playlistmusic = new PlaylistMusic();
-        $existing_playlistmusic = $playlistmusic->findByMusicname($playlist_id, $music_id);
-        if ($existing_playlistmusic) {
-            return ['error' => '此歌曲已被加入清單'];
-        }
-
-        $playlistmusic->playlist_id = $playlist_id;
-        $playlistmusic->music_id = $music_id;
-        
         try {
-            $playlistmusic->save();
-            return ['success' => '註冊成功'];
+            $musicRanking = new MusicRanking();
+            $result = $musicRanking->playcount($music_id);
+
+            if ($result) {
+                return ['success' => '播放次數增加成功'. $music_id];
+            } else {
+                return ['error' => '播放次數增加失敗'];
+            }
         } catch (Exception $e) {
-            return ['error' => '註冊失敗，請稍後再試', 'detail' => $e->getMessage()];
+            return ['error' => '播放次數增加失敗', 'detail' => $e->getMessage()];
         }
     }
 }

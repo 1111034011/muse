@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="css/back.css">
     <link rel="stylesheet" href="css/Backstage.css">
     <link rel="stylesheet" href="css/music.css" media="all">
+    <link rel="stylesheet" href="css/play.css" media="all">
+    <link rel="stylesheet" href="../RWD_Front.css"/>
+    <link rel="icon" href="/front/img/icon.png">
     <script src="js/front_side.js"></script>
 </head>
 
@@ -16,78 +19,62 @@
         <!-- 側邊欄 -->
         <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
 
-        <!-- 這個 div 用來插入側邊欄 -->
+        <!-- 側邊欄容器 -->
         <div id="sidebar-container"></div>
+
         <div class="main">
-            <!-- 主要內容 -->
-            <main >
                 <div class="top">
                     <div class="song-container">
                         <div class="song-image">
-                            <img src="img/1.webp" alt="我是音樂">
+                            <img src="img/Tomboy.jpg" alt="我是音樂">
                         </div>
                         <div class="song-info">
-                            <h1>玫瑰少年</h1>
-                            <p>蔡依林</p>
+                            <h1>Tomboy</h1>
+                            <p>gidle</p>
                             <p>流行</p>
                         </div>
                     </div>
                 </div>
-                
-                <!-- <div class="lyrics-container">
-                    <p>誰把誰的靈魂 裝進誰的身體</br>
-                        誰把誰的身體</br>
-                        變成囹圄囚禁自己</br>
-                        亂世總是最 不缺耳語</br>
-                        哪種美麗會換來妒忌</br>
-                        你並沒有罪 有罪的是這世界</br>
-                        
-                        生而為人無罪</br>
-                        你不需要抱歉</br>
-                        One day I will be you baby boy, and you gon'be me</br>
-                        喧嘩如果不停</br>
-                        讓我陪你安靜</br>
-                        I wish I could hug you, till you're really really being free</br>
-                        
-                        哪朵玫瑰沒有荊棘</br>
-                        最好的 報復是 美麗</br>
-                        最美的 盛開是 反擊</br>
-                        別讓誰去 改變了你</br>
-                        你是你 或是妳 都行</br>
-                        會有人 全心的 愛你</br>
-                        
-                        試著想像 you switched to his body</br>
-                        Sexuality 當心什麼會傷你</br>
-                        多少次的重傷 多少次的冷語</br>
-                        Drowning 誰會拉你</br>
-                        Dreaming 誰會陪你</br>
-                        Same shit happens every day</br>
-                        你離開後 世界可改變</br>
-                        多少無知罪愆 事過不境遷</br>
-                        永誌不忘紀念 往事不如煙</br>
-                        
-                        生而為人無罪</br>
-                        你不需要抱歉</br>
-                        One day I will be you baby boy, and you gon'be me</br>
-                        喧嘩如果不停</br>
-                        讓我陪你安靜</br>
-                        I wish I could hug you, till you're really really being free</br>
-                        
-                        哪朵玫瑰 沒有荊棘</br>
-                        最好的 報復是 美麗</br>
-                        最美的 盛開是 反擊</br>
-                        別讓誰去 改變了你</br>
-                        你是你 或是妳 都行</br>
-                        會有人 全心的 愛你</br>
-                        
-                        玫瑰少年 在我心裡</br>
-                        綻放著 鮮豔的 傳奇</br>
-                        我們都 從來沒 忘記</br>
-                        你的控訴 沒有聲音</br>
-                        卻傾訴 更多的 真理</br>
-                        卻喚醒 無數的 真心</p>
-                </div> -->
-            </main>
+
+                <div class="Play_Bar">
+                    <div class="track-info">
+                        <span class="track-title">播放中：</span>
+                    </div>
+                    <div class="controls">
+                        <button id="play-pause" class="btn btn-dark">
+                            <span id="play-icon">
+                                <!-- 播放 SVG -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393" />
+                                </svg>
+                            </span>
+                            <span id="pause-icon" style="display: none;">
+                                <!-- 暫停 SVG -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5" />
+                                </svg>
+                            </span>
+                        </button>
+
+                        <span id="current-time">0:00</span>
+                        <input type="range" id="seek-bar" value="0" min="0" max="100" />
+                        <span id="duration">0:00</span>
+                    </div>
+                    <div class="volume-control">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-volume-down-fill" viewBox="0 0 16 16" style="margin: 5px;">
+                            <path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12zm3.025 4a4.5 4.5 0 0 1-1.318 3.182L10 10.475A3.5 3.5 0 0 0 11.025 8 3.5 3.5 0 0 0 10 5.525l.707-.707A4.5 4.5 0 0 1 12.025 8"/>
+                          </svg>
+                        <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
+                    </div>
+                </div>
+
+                <audio id="audio-player" src="Tomboy.mp3"></audio>
+
+                <script src="js/play.js"></script>
         </div>
     </div>
 </body>

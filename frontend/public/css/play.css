@@ -1,0 +1,46 @@
+button {
+    background-color: #2c2c3e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: sans-serif;
+}
+
+.Play_Bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background-color: #2c2c3e;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: sans-serif;
+    z-index: 1000;
+}
+
+.track-info {
+    flex: 1;
+}
+
+.controls {
+    flex: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#seek-bar {
+    flex: 1;
+}
+
+.volume-control {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

@@ -29,18 +29,30 @@ class Music extends Model
         return $stmt->execute();
     }
 
-    public function getAllMusic()
+
+    public function getAllMusic($options = [])
     {
+        $is_adult = $options['is_adult'] ?? null;
+
         $db = Database::getConnection();
-        $sql = "SELECT m.Music_Id, m.Music_Name, m.Artist, mt.Tag_Name 
-                FROM music AS m
-                LEFT JOIN music_tag AS mt ON m.Tag_Id = mt.Tag_Id
-                ";
-        // $sql = "SELECT m.Music_Name, m.Artist, mt.Tag_Name FROM music as m, music_tag as mt WHERE m.Tag_Id = mt.Tag_Id";
+
+        $hasAdultFilter = $is_adult === false;
+
+        $sql = "SELECT m.Music_Id, m.Music_Name, m.Artist, m.Is_Adult, mt.Tag_Name
+            FROM music AS m
+            LEFT JOIN music_tag AS mt ON m.Tag_Id = mt.Tag_Id";
+
+        if ($hasAdultFilter) {
+            $sql .= " WHERE m.Is_Adult = 0";
+        }
+
         $stmt = $db->prepare($sql);
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
 
     public function countAllMusic()
     {

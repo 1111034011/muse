@@ -35,4 +35,16 @@ class PlaylistMusic extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getAllMusic()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT m.Music_Id, m.Music_Name, m.Artist, mt.Tag_Name 
+                FROM music AS m
+                LEFT JOIN music_tag AS mt ON m.Tag_Id = mt.Tag_Id
+                ";
+        // $sql = "SELECT m.Music_Name, m.Artist, mt.Tag_Name FROM music as m, music_tag as mt WHERE m.Tag_Id = mt.Tag_Id";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

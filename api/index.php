@@ -13,6 +13,8 @@ use project\core\Application;
 use project\controllers\SubUserController;
 use project\controllers\BackstageController;
 use project\controllers\MusicController;
+use project\controllers\AddMusicController;
+
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -49,6 +51,7 @@ $app->router->post('/api/sub-users', [SubUserController::class, 'create']);
 $app->router->get('/api/sub-users/:id', [SubUserController::class, 'get']);
 $app->router->patch('/api/sub-users/:id', [SubUserController::class, 'update']);
 $app->router->delete('/api/sub-users/:id', [SubUserController::class, 'delete']);
+$app->router->post('/api/sub-users/login', [SubUserController::class, 'login']);
 // $app->router->post('/api/Login/add', [LoginController::class, 'add']);
 // FIXME: Rename to $app->router->patch('/api/me', [UserController::class, 'update']);
 $app->router->post('/api/Login/Imedit', [LoginController::class, 'Imedit']);
@@ -64,16 +67,17 @@ $app->router->get('/api/Backstage/music/:id', [BackstageController::class, 'get'
 $app->router->patch('/api/Backstage/music/:id', [BackstageController::class, 'update']);
 $app->router->delete('/api/Backstage/music/:id', [BackstageController::class, 'delete']);
 
-//TODO:前端接API，在Backstage_js.php
 $app->router->get('/api/Backstage/musiccount', [BackstageController::class, 'musiccount']);
 $app->router->get('/api/Backstage/membercount', [BackstageController::class, 'membercount']);
 
 $app->router->get('/api/Music/playlists', callback: [MusicController::class, 'list']);
 $app->router->post('/api/Music/playlists', callback: [MusicController::class, 'create']);
+$app->router->post('/api/Music/musiclist', callback: [MusicController::class, 'musiclist']);
 
+$app->router->get('/api/Music/musicplaycount', callback: [MusicController::class, 'musicplaycount']);
 
-
-$app->router->post('/api/Music/addmusictolist', [MusicController::class, 'addmusictolist']);
+// $app->router->post('/api/Music/addmusictolist', [MusicController::class, 'addmusictolist']);
+$app->router->post('/api/AddMusic/addmusic', [AddMusicController::class, 'create']);
 
 
 $app->router->post('/api/PlayMusic/play', [PlayMusicController::class, 'playMusic']);

@@ -143,7 +143,6 @@ class LoginController
     //login
     public function login(Request $request)
     {
-        // TODO: Remove this line
         $username = $request->body()['username'] ?? null;
         $password = $request->body()['password'] ?? null;
 
@@ -162,6 +161,7 @@ class LoginController
             'iat' => time(),
             'exp' => time() + 3600*24*7, // 7days
             'role' => $user->role, // TODO: Add role
+            'is_owner' => true,
         ];
 
         $token = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');

@@ -37,22 +37,37 @@
             </div>
             <!-- 內容區域 -->
             <main id="contents" style="width:auto;">
-                <div class="top">
+                <!-- <div class="top">
                     <div class="slider">
                         <div class="slide"><img src="img/1.webp" alt="唱片1"></div>
                         <div class="slide"><img src="img/1.webp" alt="唱片2"></div>
                         <div class="slide"><img src="img/1.webp" alt="唱片3"></div>
                     </div>
+                </div> -->
+
+                <div class="carousel">
+                    <div class="carousel-track">
+                        <a href="music.html"><img src="./img/1.webp" alt="1"></a>
+                        <a href="music.html"><img src="./img/APT..jpg" alt="2"></a>
+                        <a href="music.html"><img src="./img/ReallyLikeYou.jpg" alt="3"></a>
+                        <a href="music.html"><img src="./img/ROCKSTAR_lisa.jpg" alt="4"></a>
+                        <a href="music.html"><img src="./img/誰不是過著坎坷人生.jpg" alt="5"></a>
+                        <a href="music.html"><img src="./img/都怪我太貪心.jpg" alt="6"></a>
+                    </div>
                 </div>
+
+                <!-- 圓點控制區域 -->
+                <div class="dots"></div>
+                <script src="js/turnplay.js"></script>
 
                 <!-- 搜尋欄位 -->
                 <div class="search-bar">
                     <input type="text" placeholder="搜尋" id="searchInput">
-                    <button onclick="window.location.href='ranking.html'">
+                    <button onclick="searchMusic()">
                         <img src="img/Search 02.png" alt="搜尋">
                     </button>
-
                 </div>
+
 
                 <!-- 歌曲區域 -->
                 <div class="song">
@@ -144,6 +159,18 @@
             </main>
         </div>
     </div>
+    <form id="playlistForm" method="POST">
+        <div id="playlistModal" class="modal" hidden>
+            <div class="modal-content">
+                <h3>將音樂儲存至...</h3>
+                <input type="text" id="name" placeholder="輸入歌單名稱">
+                <p id="errorMessage" style="color: red;"></p>
+                <br>
+                <button type="submit" id="confirmAddUser">確認新增</button>
+                <button onclick="closeModal()">取消</button>
+            </div>
+        </div>
+    </form>
 </body>
 
 <script>
@@ -181,7 +208,7 @@
         }
 
         const hotSongsList = document.querySelector('.hot ul');
-        hotSongsList.innerHTML = ''; 
+        hotSongsList.innerHTML = '';
 
         const hotSongs = musicData.slice(0, Math.min(3, musicData.length));
 
@@ -203,13 +230,13 @@
         });
 
         const personalSongsList = document.querySelector('.persontt ul');
-        personalSongsList.innerHTML = ''; 
+        personalSongsList.innerHTML = '';
 
         let personalSongs = [];
         if (musicData.length > 3) {
-            personalSongs = musicData.slice(3, 6); 
+            personalSongs = musicData.slice(3, 6);
         } else {
-            personalSongs = musicData.slice(0, Math.min(3, musicData.length)); 
+            personalSongs = musicData.slice(0, Math.min(3, musicData.length));
         }
 
         personalSongs.forEach(music => {
@@ -234,8 +261,8 @@
 
     // 加入歌單功能
     function addToPlaylist(event, musicId) {
-        event.preventDefault(); 
-        event.stopPropagation(); 
+        event.preventDefault();
+        event.stopPropagation();
 
         // 這裡添加將歌曲加入歌單的邏輯
         console.log(`將音樂 ID: ${musicId} 加入歌單`);
@@ -249,6 +276,55 @@
     document.addEventListener('DOMContentLoaded', () => {
         member_data();
     });
+
+
+
+    function searchMusic() {
+        const search = document.getElementById("searchInput").value;
+        const apiUrl = `http://localhost:8000/api/SearchMusic/getData?page=1&search=${encodeURIComponent(search)}`;
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error("搜尋時發生錯誤");
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === "success") {
+                    displaySearchResults(data.data.records);
+                } else {
+                    alert("搜尋結果為空");
+                }
+            })
+            .catch(error => {
+                console.error("搜尋錯誤:", error);
+                alert("搜尋過程中發生錯誤");
+            });
+    }
+
+    function displaySearchResults(records) {
+        const rankContainer = document.querySelector(".rank");
+        if (!rankContainer) {
+            console.warn("找不到 .rank 元素");
+            return;
+        }
+
+        rankContainer.innerHTML = ''; // 清空原本的排行內容
+
+        records.forEach(record => {
+            const songItem = document.createElement("div");
+            songItem.className = "song-item";
+            songItem.setAttribute("onclick", `goToMusic('${record.Music_Name}')`);
+            songItem.innerHTML = `
+                    <div class="song-info">
+                        <div class="song-text">
+                            <strong>${record.Music_Name}</strong><br>${record.Artist}
+                        </div>
+                    </div>
+                    <button class="add-button" onclick="event.stopPropagation(); openPlaylistModal();">加入歌單</button>
+                `;
+            rankContainer.appendChild(songItem);
+        });
+    }
 </script>
 
 </html>

@@ -16,18 +16,21 @@ class SubUser extends Model
     public $username = '';
     public $pin_num = '';
     public $preferences = '';
+    public $is_adult = false;
+    public $is_owner = false;
 
     public function save()
     {
         $db = Database::getConnection();
 
-        $sql = "INSERT INTO sub_member (Member_Id, Username, Pin_Num) VALUES (:member_id, :username, :pin_num)";
+        $sql = "INSERT INTO sub_member (Member_Id, Username, Pin_Num, Is_Adult, Is_Owner) VALUES (:member_id, :username, :pin_num, :is_adult, :is_owner)";
         $stmt = $db->prepare($sql);
 
         $stmt->bindParam(':member_id', $this->member_id);
         $stmt->bindParam(':username', $this->username);
         $stmt->bindParam(':pin_num', $this->pin_num);
-
+        $stmt->bindParam(':is_adult', $this->is_adult, PDO::PARAM_BOOL);
+        $stmt->bindParam(':is_owner', $this->is_owner, PDO::PARAM_BOOL);
         return $stmt->execute();
     }
 
@@ -63,7 +66,7 @@ class SubUser extends Model
 
         return $stmt->execute($params);
     }
-    
+
     public function findByMemberId(string $member_id)
     {
         $db = Database::getConnection();
@@ -73,10 +76,10 @@ class SubUser extends Model
 
         $stmt->bindParam(':member_id', $member_id);
         $stmt->execute();
-        
+
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        return array_map(function($item) {
+
+        return array_map(function ($item) {
             return [
                 'sub_member_id' => $item['Sub_Member_Id'],
                 'member_id' => $item['Member_Id'],
@@ -85,7 +88,7 @@ class SubUser extends Model
             ];
         }, $rows);
     }
-    
+
     public function findById(string $sub_member_id, string $member_id)
     {
         $db = Database::getConnection();
@@ -94,14 +97,14 @@ class SubUser extends Model
         if ($member_id) {
             $sql .= " AND Member_Id = :member_id";
         }
-        
+
         $stmt = $db->prepare($sql);
-        
+
         $stmt->bindParam(':sub_member_id', $sub_member_id);
         if ($member_id) {
             $stmt->bindParam(':member_id', $member_id);
         }
-        
+
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -114,10 +117,10 @@ class SubUser extends Model
         $sub_user->member_id = $row['Member_Id'];
         $sub_user->username = $row['Username'];
         $sub_user->preferences = !empty($row['Preferences']) ? json_decode($row['Preferences'], true) : null;
-        
+
         return $sub_user;
     }
-    
+
     public function delete(string $sub_member_id, string $member_id)
     {
         $db = Database::getConnection();
@@ -140,9 +143,24 @@ class SubUser extends Model
 
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':member_id', $member_id);
-        
+
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+        $sub_user = new SubUser();
+        $sub_user->sub_member_id = $row['Sub_Member_Id'];
+        $sub_user->member_id = $row['Member_Id'];
+        $sub_user->username = $row['Username'];
+        $sub_user->pin_num = $row['Pin_Num'];
+        $sub_user->preferences = !empty($row['Preferences']) ? json_decode($row['Preferences'], true) : null;
+        $sub_user->is_adult = $row['Is_Adult'] === 1;
+        $sub_user->is_owner = $row['Is_Owner'] === 1;
+
+        return $sub_user;
     }
+
 }
 

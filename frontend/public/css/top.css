@@ -1,50 +1,129 @@
-.head{
-    z-index: 2;
-}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-.top {
-    z-index: 1;
+  body {
+    height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-    overflow: hidden;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  main{
+    width: 100vw;
+    margin-top: 300px;
+  }
+  .carousel {
     position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+  }
 
-    padding: 20px 0;
-}
+  .carousel-track {
+    margin-top: 30px;
+    position: relative;
+    width: 100vw;
+    height: 100%;
+    z-index: 1;
+  }
 
-.slider {
-    margin-bottom: -115PX;
-    padding-top: 30px;
+  .carousel-track a img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: all 0.5s ease;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+    filter: brightness(30%);
+    z-index: 0;
+  }
+
+  .carousel-track a img.active {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    filter: brightness(100%);
+    z-index: 5;
+  }
+
+  .carousel-track a img.prev {
+    transform: translate(-100%, -50%) scale(0.8);
+    opacity: 1;
+    filter: brightness(70%);
+    z-index: 3;
+  }
+
+  .carousel-track a img.next {
+    transform: translate(0%, -50%) scale(0.8);
+    opacity: 1;
+    filter: brightness(70%);
+    z-index: 3;
+
+  }
+
+  .carousel-track a img.prev2 {
+    transform: translate(-150%, -50%) scale(0.6);
+    opacity: 1;
+    filter: brightness(50%);
+    z-index: 2;
+  }
+
+  .carousel-track a img.next2 {
+    transform: translate(50%, -50%) scale(0.6);
+    opacity: 1;
+    filter: brightness(50%);
+    z-index: 2;
+
+  }
+
+  /* 其他都藏起來 */
+  .carousel-track a img:not(.active):not(.prev):not(.next):not(.prev2):not(.next2) {
+    opacity: 0;
+    z-index: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+
+  /* 圓點控制 */
+  .dots {
     display: flex;
-    transition: transform 1s ease-in-out;
-    /* width: 300%; 
-    height: 30%; */
-}
+    justify-content: center;
+    margin-top: 20px;
+  }
 
-.slide {
-    min-width: 100%;
-    transition: transform 1s;
-    text-align: center;
-}
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #fff;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
 
-.slide img {
-    width: 80%;
-    height: 80%;
-    max-width: 600px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+  .dot.active {
+    background-color: #4f69b6;
+  }
 
 
-.search-bar {
+  .carousel-track a img.active:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .search-bar {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 80%; 
+    width: 80%;
     max-width: 1050px;
     background: white;
-    border-radius: 50px; 
+    border-radius: 50px;
     padding: 5px;
     margin: 20px auto;
 }
