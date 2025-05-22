@@ -14,16 +14,20 @@ class Music extends Model
     public $music_name = '';
     public $artist = '';
     public $music_url = '';
+    public $tag_id = '';
+    public $is_adult = '';
 
     public function musicinsert()
     {
         $db = Database::getConnection();
 
-        $sql = "INSERT INTO music (Music_Name, Artist, Music_Url) VALUES (:music_name, :artist, :music_url)";
+        $sql = "INSERT INTO music (Music_Name, Artist, Tag_Id, Is_Adult, Music_Url) VALUES (:music_name, :artist, :tag_id, :is_adult, :music_url)";
         $stmt = $db->prepare($sql);
 
         $stmt->bindParam(':music_name', $this->music_name);
         $stmt->bindParam(':artist', $this->artist);
+        $stmt->bindParam(':tag_id', $this->tag_id);
+        $stmt->bindParam(':is_adult', $this->is_adult);
         $stmt->bindParam(':music_url', $this->music_url);
 
         return $stmt->execute();
@@ -38,7 +42,13 @@ class Music extends Model
 
         $hasAdultFilter = $is_adult === false;
 
-        $sql = "SELECT m.Music_Id, m.Music_Name, m.Artist, m.Is_Adult, mt.Tag_Name
+        $sql = "SELECT m.Music_Id, m.Music_Name, m.Artist, m.Is_Adult, 
+                    CASE m.Is_Adult 
+                        WHEN 1 THEN '一般' 
+                        WHEN 0 THEN '兒童' 
+                        ELSE '未知' 
+                    END AS Is_Adult_Text,
+                    mt.Tag_Name
             FROM music AS m
             LEFT JOIN music_tag AS mt ON m.Tag_Id = mt.Tag_Id";
 
@@ -64,14 +74,15 @@ class Music extends Model
         // return $result['count'];
     }
 
-    public function updateMusic($music_id, $music_name, $artist, $music_url, $tag_id)
+    public function updateMusic($music_id, $music_name, $artist, $music_url, $tag_id, $is_adult)
     {
         $db = Database::getConnection();
         $sql = "UPDATE music 
             SET Music_Name = :music_name, 
                 Artist = :artist, 
                 Music_Url = :music_url, 
-                Tag_Id = :tag_id 
+                Tag_Id = :tag_id,
+                Is_Adult = :is_adult
             WHERE Music_Id = :music_id";
 
         $stmt = $db->prepare($sql);
@@ -79,6 +90,7 @@ class Music extends Model
         $stmt->bindParam(':artist', $artist);
         $stmt->bindParam(':music_url', $music_url);
         $stmt->bindParam(':tag_id', $tag_id);
+        $stmt->bindParam(':is_adult', $is_adult);
         $stmt->bindParam(':music_id', $music_id);
 
         return $stmt->execute();

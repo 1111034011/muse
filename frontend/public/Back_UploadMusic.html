@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/back.css">
   <link rel="stylesheet" href="css/BackSet.css">
   <link rel="stylesheet" href="css/Back_uploadmusic.css">
+  <link rel="stylesheet" href="css/back_editmusic.css">
   <script src="js/side.js"></script>
 </head>
 
@@ -29,6 +30,32 @@
         <div class="input-group">
           <label for="artist-name">歌手名稱</label>
           <input type="text" id="artist" placeholder="輸入歌手名稱">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="input-group">
+          <label for="song-type">類型</label>
+          <select id="tag_id">
+            <option value="" disabled selected>選擇歌曲類型</option>
+            <option value="1">流行</option>
+            <option value="2">搖滾</option>
+            <option value="3">嘻哈</option>
+            <option value="4">電子</option>
+            <option value="5">爵士</option>
+            <option value="6">古典</option>
+            <option value="7">藍調</option>
+            <option value="8">鄉村</option>
+            <option value="9">雷鬼</option>
+            <option value="10">R&B</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="restriction" disabled selected>限制</label>
+          <select id="is_adult">
+            <option value="">選擇輸入限制</option>
+            <option value="1">一般</option>
+            <option value="0">兒童</option>
+          </select>
         </div>
       </div>
       <div class="form-row">
@@ -61,6 +88,8 @@
     const formData = {
       music_name: document.getElementById('music_name').value,
       artist: document.getElementById('artist').value,
+      tag_id: document.getElementById('tag_id').value,
+      is_adult: document.getElementById('is_adult').value,
       music_url: document.getElementById('music_url').value
     };
 
@@ -72,6 +101,8 @@
       // 在 headers 加入 json 格式
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+
       },
       // 傳送內容須轉換為字串
       body: data,

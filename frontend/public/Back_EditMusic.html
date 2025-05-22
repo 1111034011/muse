@@ -34,7 +34,7 @@
       </div>
 
       <div class="form-row">
-        <div class="input-group" style="width: 100%;">
+        <div class="input-group">
           <label for="song-type">類型</label>
           <select id="tag_id">
             <option value="" disabled selected>選擇歌曲類型</option>
@@ -50,14 +50,14 @@
             <option value="10">R&B</option>
           </select>
         </div>
-        <!-- <div class="input-group">
-          <label for="restriction"disabled selected>限制</label>
-          <select id="restriction">
-            <option value="">選擇輸入限制</option>
-            <option value="pop">普通</option>
-            <option value="rock">限制</option>
+        <div class="input-group">
+          <label for="restriction">限制</label>
+          <select id="is_adult">
+            <option value="" disabled selected>選擇輸入限制</option>
+            <option value="1">一般</option>
+            <option value="0">兒童</option>
           </select>
-        </div> -->
+        </div>
       </div>
 
       <div class="form-row">
@@ -111,6 +111,8 @@
           document.getElementById('artist').value = music.artist;
           document.getElementById('music_url').value = music.music_url;
           document.getElementById('tag_id').value = music.tag_id;
+          document.getElementById('is_adult').value = music.is_adult;
+
         } else {
           alert('載入失敗：' + (body.error || '未知錯誤'));
           window.location.href = 'Backmusic.html';
@@ -134,6 +136,7 @@
       music_name: document.getElementById('music_name').value.trim(),
       artist: document.getElementById('artist').value.trim(),
       music_url: document.getElementById('music_url').value.trim(),
+      is_adult: document.getElementById('is_adult').value,
       tag_id: document.getElementById('tag_id').value
     };
 

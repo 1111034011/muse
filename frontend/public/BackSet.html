@@ -39,12 +39,12 @@
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">x</button>
       <h1>編輯密碼</h1>
-      <form id="passwordForm" action="BackSet.html" method="POST" target="_parent" onsubmit="return validatePasswords();"
-        style="width: 95%;">
-        <div>
+      <form id="passwordForm" action="BackSet.html" method="POST" target="_parent"
+        onsubmit="return validatePasswords();" style="width: 95%;">
+        <!-- <div>
           <label for="oldPassword">原始密碼</label>
-          <input type="text" id="oldPassword" name="password" value="zxcv1234" disabled required>
-        </div>
+          <input type="text" id="oldPassword" name="password" disabled required>
+        </div> -->
         <div>
           <label for="newPassword">修改密碼</label>
           <input type="password" id="newPassword" name="new-password" required>
@@ -67,60 +67,63 @@
 
 <script>
   document.getElementById('passwordForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-      changePassword();
+    event.preventDefault();
+    changePassword();
   });
   const changePassword = () => {
-      const formData = {
-          newPassword: document.getElementById('newPassword').value.trim(),
-          confirmPassword: document.getElementById('confirmPassword').value.trim()
-      };
+    const formData = {
+      newPassword: document.getElementById('newPassword').value.trim(),
+      confirmPassword: document.getElementById('confirmPassword').value.trim()
+    };
 
-      if (formData.newPassword === '' || formData.confirmPassword === '') {
-          errorMessage.innerText = '密碼欄位不能為空！';
-          return;
-      }
+    if (formData.newPassword === '' || formData.confirmPassword === '') {
+      errorMessage.innerText = '密碼欄位不能為空！';
+      return;
+    }
 
-      if (formData.newPassword !== formData.confirmPassword) {
-          errorMessage.innerText = '兩次輸入的密碼不一致！';
-          return;
-      }
+    if (formData.newPassword !== formData.confirmPassword) {
+      errorMessage.innerText = '兩次輸入的密碼不一致！';
+      return;
+    }
 
-      const data = JSON.stringify(formData)
-      console.log(JSON.stringify(formData));
-      fetch("http://localhost:8000/api/Login/changePassword", {
-          // 設定為 POST 請求
-          method: 'POST',
-          // 在 headers 加入 json 格式
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + localStorage.getItem('token')
-          },
-          // 傳送內容須轉換為字串
-          body: data,
+    const data = JSON.stringify(formData)
+    console.log(JSON.stringify(formData));
+    fetch("http://localhost:8000/api/Login/changePassword", {
+      // 設定為 POST 請求
+      method: 'POST',
+      // 在 headers 加入 json 格式
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+      // 傳送內容須轉換為字串
+      body: data,
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok ' + res.statusText);
+        }
+        return res.json();
       })
-          .then(res => {
-              if (!res.ok) {
-                  throw new Error('Network response was not ok ' + res.statusText);
-              }
-              return res.json();
-          })
-          .then(body => {
-              console.log(body);
-              const div = document.getElementById('passwordForm');
-              div.innerHTML = '';
-              const message = body.success || body.error || '未知錯誤';
-              const span = document.createElement('span');
-              span.innerText = message;
-              div.appendChild(span);
-          })
+      .then(body => {
+        if (body.password) {
+          document.getElementById('oldPassword').value = body.password;
+        }
+        console.log(body);
+        const div = document.getElementById('passwordForm');
+        div.innerHTML = '';
+        const message = body.success || body.error || '未知錯誤';
+        const span = document.createElement('span');
+        span.innerText = message;
+        div.appendChild(span);
+      })
 
-          .catch(error => {
-              console.error("Fetch Error:", error);
-              alert("請求失敗，請檢查 API 是否運行！");
-          });
+      .catch(error => {
+        console.error("Fetch Error:", error);
+        alert("請求失敗，請檢查 API 是否運行！");
+      });
 
-      alert('密碼修改成功！');
+    alert('密碼修改成功！');
   };
 </script>
 

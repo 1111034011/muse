@@ -18,29 +18,36 @@ class BackstageController extends Controller
 {
     public function insert(Request $request)
     {
-        
         $parsed_token = $this->verifyToken($request);
         if (!$parsed_token) {
             return ['error' => '未登入，請先登入'];
         }
-        if (!($parsed_token->role ?? null) !== 'admin') {
+        if (($parsed_token->role ?? null) !== 'admin') {
             return ['error' => '權限不足'];
         }
 
         $music_name = $request->body()['music_name'] ?? null;
         $artist = $request->body()['artist'] ?? null;
+        $tag_id = $request->body()['tag_id'] ?? null;
+        $is_adult = $request->body()['is_adult'] ?? null;
         $music_url = $request->body()['music_url'] ?? null;
 
         if (empty($music_name))
             return ['error' => '歌曲名稱是必填的'];
         if (empty($artist))
             return ['error' => '歌手是必填的'];
+        if (empty($tag_id))
+            return ['error' => '類型是必填的'];
+        if (empty($is_adult))
+            return ['error' => '是否成人是必填的'];
         if (empty($music_url))
             return ['error' => '歌曲網址是必填的'];
 
         $music = new Music();
         $music->music_name = $music_name;
         $music->artist = $artist;
+        $music->tag_id=$tag_id;
+        $music->is_adult = $is_adult;
         $music->music_url = $music_url;
 
         try {
@@ -57,7 +64,7 @@ class BackstageController extends Controller
         if (!$parsed_token) {
             return ['error' => '未登入，請先登入'];
         }
-        if (!($parsed_token->role ?? null) !== 'admin') {
+        if (($parsed_token->role ?? null) !== 'admin') {
             return ['error' => '權限不足'];
         }
 
@@ -66,6 +73,7 @@ class BackstageController extends Controller
         $artist = $request->body()['artist'] ?? null;
         $music_url = $request->body()['music_url'] ?? null;
         $tag_id = $request->body()['tag_id'] ?? null;
+        $is_adult = $request->body()['is_adult'] ?? null;
 
         if (empty($music_name))
             return ['error' => '音樂名稱是必填的'];
@@ -83,7 +91,7 @@ class BackstageController extends Controller
             //     return ['error' => '標籤ID不存在，請確認標籤是否正確'];
             // }
 
-            $musicModel->updateMusic($music_id, $music_name, $artist, $music_url, $tag_id);
+            $musicModel->updateMusic($music_id, $music_name, $artist, $music_url, $tag_id, $is_adult);
             return ['success' => '更新成功'];
         } catch (Exception $e) {
             return ['error' => '更新失敗，請稍後再試', 'detail' => $e->getMessage()];
@@ -96,7 +104,7 @@ class BackstageController extends Controller
         if (!$parsed_token) {
             return ['error' => '未登入，請先登入'];
         }
-        if (!($parsed_token->role ?? null) !== 'admin') {
+        if (($parsed_token->role ?? null) !== 'admin') {
             return ['error' => '權限不足'];
         }
 
@@ -118,7 +126,7 @@ class BackstageController extends Controller
         if (!$parsed_token) {
             return ['error' => '未登入，請先登入'];
         }
-        if (!($parsed_token->role ?? null) !== 'admin') {
+        if (($parsed_token->role ?? null) !== 'admin') {
             return ['error' => '權限不足'];
         }
 
@@ -142,18 +150,17 @@ class BackstageController extends Controller
     public function musiclist(Request $request)
     {
         $parsed_token = $this->verifyToken($request);
-        // if (!$parsed_token) {
-        //     return json_encode(['error' => '未登入，請先登入'], 401);
-        // }
-        // if (!($parsed_token->role ?? null) !== 'admin') {
-        //     return ['error' => '權限不足'];
-        // }
+        if (!$parsed_token) {
+            return json_encode(['error' => '未登入，請先登入'], 401);
+        }
+        if (($parsed_token->role ?? null) !== 'admin') {
+            return ['error' => '權限不足'];
+        }
 
         try {
-
             $musicModel = new Music();
             $music = $musicModel->getAllMusic([
-                'is_adult' => $parsed_token->is_adult,
+                // 'is_adult' => $parsed_token->is_adult,
             ]);
             return [
                 'success' => true,
@@ -173,7 +180,7 @@ class BackstageController extends Controller
         if (!$parsed_token) {
             return json_encode(['error' => '未登入，請先登入'], 401);
         }
-        if (!($parsed_token->role ?? null) !== 'admin') {
+        if (($parsed_token->role ?? null) !== 'admin') {
             return ['error' => '權限不足'];
         }
 
@@ -198,7 +205,7 @@ class BackstageController extends Controller
         if (!$parsed_token) {
             return json_encode(['error' => '未登入，請先登入'], 401);
         }
-        if (!($parsed_token->role ?? null) !== 'admin') {
+        if (($parsed_token->role ?? null) !== 'admin') {
             return ['error' => '權限不足'];
         }
 
@@ -223,7 +230,7 @@ class BackstageController extends Controller
         if (!$parsed_token) {
             return json_encode(['error' => '未登入，請先登入'], 401);
         }
-        if (!($parsed_token->role ?? null) !== 'admin') {
+        if (($parsed_token->role ?? null) !== 'admin') {
             return ['error' => '權限不足'];
         }
 
