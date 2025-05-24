@@ -144,6 +144,7 @@
                 div.appendChild(span);
                 if (body.success) {
                     sendVerificationEmail(formData.email);
+                    
                     window.location.href = 'login.html';
                 } else {
                     errorMessage.innerText = body.error || '註冊失敗，請稍後再試';

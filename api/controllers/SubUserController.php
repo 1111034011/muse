@@ -23,15 +23,19 @@ class SubUserController extends Controller
         $username = $request->body()['username'] ?? null;
         $pin_num = $request->body()['pin_num'] ?? null;
         $is_adult = $request->body()['is_adult'] ?? false;
-        $is_owner = $request->body()['is_owner'] ?? false; //帳號擁有者的子帳號is_owner必須是true
-
-
-
-        if (empty($username)) return ['error' => '使用者名稱是必填的'];
-        if (empty($pin_num)) return ['error' => 'PIN 碼是必填的'];
-        if (!preg_match('/^\d{4}$/', $pin_num)) return ['error' => 'PIN 碼必須是 4 位數字'];
 
         $sub_user = new SubUser();
+        $sub_user_count = $sub_user->countSubUsers($parsed_token->sub);
+        $is_owner = $sub_user_count < 1;
+
+        if (empty($username))
+            return ['error' => '使用者名稱是必填的'];
+        if (empty($pin_num))
+            return ['error' => 'PIN 碼是必填的'];
+        if (!preg_match('/^\d{4}$/', $pin_num))
+            return ['error' => 'PIN 碼必須是 4 位數字'];
+
+
         $existing_user = $sub_user->findByUsername($username, $parsed_token->sub);
         if ($existing_user) {
             return ['error' => '此使用者名稱已被註冊'];
@@ -41,7 +45,6 @@ class SubUserController extends Controller
         // $hashed_pin_num = password_hash($pin_num, PASSWORD_BCRYPT);
 
         $sub_user->member_id = $parsed_token->sub;
-        $sub_user->sub_member_id = $parsed_token->sub;
         $sub_user->username = $username;
         $sub_user->pin_num = $pin_num;
         $sub_user->is_adult = $is_adult;
@@ -64,7 +67,7 @@ class SubUserController extends Controller
         if (!($parsed_token->is_owner ?? false)) {
             return ['error' => '權限不足'];
         }
-        
+
         try {
             $sub_user = new SubUser();
             $sub_users = $sub_user->findByMemberId($parsed_token->sub);
@@ -94,7 +97,7 @@ class SubUserController extends Controller
         if (!$current_sub_user) {
             return ['error' => '找不到使用者'];
         }
-        
+
         return ['data' => $current_sub_user];
     }
 
@@ -177,7 +180,7 @@ class SubUserController extends Controller
         }
     }
 
-    
+
     public function login(Request $request)
     {
         $parsed_token = $this->verifyToken($request);
@@ -188,9 +191,12 @@ class SubUserController extends Controller
         $username = $request->body()['username'] ?? null;
         $pin_num = $request->body()['pin_num'] ?? null;
 
-        if (empty($username)) return ['error' => '使用者名稱是必填的'];
-        if (empty($pin_num)) return ['error' => 'PIN 碼是必填的'];
-        if (!preg_match('/^\d{4}$/', $pin_num)) return ['error' => 'PIN 碼必須是 4 位數字'];
+        if (empty($username))
+            return ['error' => '使用者名稱是必填的'];
+        if (empty($pin_num))
+            return ['error' => 'PIN 碼是必填的'];
+        if (!preg_match('/^\d{4}$/', $pin_num))
+            return ['error' => 'PIN 碼必須是 4 位數字'];
 
         $sub_user = new SubUser();
         $existing_user = $sub_user->findByUsername($username, $parsed_token->sub);
@@ -206,7 +212,7 @@ class SubUserController extends Controller
         $payload = [
             'sub' => $parsed_token->sub,
             'iat' => time(),
-            'exp' => time() + 3600*24*7, // 7days
+            'exp' => time() + 3600 * 24 * 7, // 7days
             'role' => 'sub_user',
             'sub_user_id' => $existing_user->sub_member_id,
             'username' => $existing_user->username,

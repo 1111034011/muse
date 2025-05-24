@@ -43,8 +43,8 @@
     });
     const Imedit = () => {
         const formData = {
-            username: document.getElementById('username').value,
-            email: document.getElementById('email').value
+            username: document.getElementById('username').value=formData.username,
+            email: document.getElementById('email').value=formData.email,
         };
 
         const data = JSON.stringify(formData)

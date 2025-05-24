@@ -67,6 +67,8 @@ $app->router->get('/api/Backstage/music/:id', [BackstageController::class, 'get'
 $app->router->patch('/api/Backstage/music/:id', [BackstageController::class, 'update']);
 $app->router->delete('/api/Backstage/music/:id', [BackstageController::class, 'delete']);
 
+$app->router->get('/api/Backstage/musicCountByTag', [BackstageController::class, 'musicCountByTag']);
+$app->router->get('/api/Backstage/musicCountByIsAdult', [BackstageController::class, 'musicCountByIsAdult']);
 $app->router->get('/api/Backstage/musiccount', [BackstageController::class, 'musiccount']);
 $app->router->get('/api/Backstage/membercount', [BackstageController::class, 'membercount']);
 

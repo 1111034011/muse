@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>新增使用者</title>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/cjs/index.min.js"></script>
     <style>
         body {
             font-family: "Helvetica Neue", sans-serif;
@@ -196,7 +197,35 @@
                         userCard.className = 'user-card';
                         userCard.innerText = user.username;  // 顯示姓名
                         userCard.addEventListener('click', () => {
-                            window.location.href = 'index.html';//?sub_member_id=${user.sub_member_id}
+                            const pinNum = prompt('請輸入PIN碼');
+                            console.log(202, pinNum);
+                            fetch("http://localhost:8000/api/sub-users/login", {
+                                method: 'POST',
+                                credentials: 'include',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                },
+                                body: JSON.stringify({
+                                    username: user.username,
+                                    pin_num: pinNum
+                                }),
+                            })
+                            .then(res => {
+                                if (!res.ok) {
+                                    throw new Error('Network response was not ok: ' + res.statusText);
+                                }
+                                return res.json();
+                            })
+                            .then(body => {
+                                console.log(221,body);
+                                if (body.success) {
+                                    localStorage.setItem('token', body.token);
+                                    window.location.href = 'index.html';//?sub_member_id=${user.sub_member_id}
+                                } else {
+                                    alert(body.error || '登入失敗，請稍後再試');
+                                }
+                            })
                         });
                         container.appendChild(userCard);
                     });

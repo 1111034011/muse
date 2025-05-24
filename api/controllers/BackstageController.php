@@ -46,7 +46,7 @@ class BackstageController extends Controller
         $music = new Music();
         $music->music_name = $music_name;
         $music->artist = $artist;
-        $music->tag_id=$tag_id;
+        $music->tag_id = $tag_id;
         $music->is_adult = $is_adult;
         $music->music_url = $music_url;
 
@@ -59,7 +59,7 @@ class BackstageController extends Controller
     }
 
     public function update(Request $request)
-    {   
+    {
         $parsed_token = $this->verifyToken($request);
         if (!$parsed_token) {
             return ['error' => '未登入，請先登入'];
@@ -116,7 +116,7 @@ class BackstageController extends Controller
         if (!$current_music) {
             return ['error' => '找不到音樂'];
         }
-        
+
         return ['data' => $current_music];
     }
 
@@ -169,6 +169,58 @@ class BackstageController extends Controller
         } catch (Exception $e) {
             return [
                 'error' => '獲取列表失敗',
+                'detail' => $e->getMessage()
+            ];
+        }
+    }
+
+
+    public function musicCountByTag(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return json_encode(['error' => '未登入，請先登入'], 401);
+        }
+        if (($parsed_token->role ?? null) !== 'admin') {
+            return ['error' => '權限不足'];
+        }
+
+        try {
+            $musicModel = new Music();
+            $result = $musicModel->countMusicByTag();
+            return [
+                'success' => true,
+                'data' => $result
+            ];
+        } catch (Exception $e) {
+            return [
+                'error' => '獲取分類數量失敗',
+                'detail' => $e->getMessage()
+            ];
+        }
+    }
+
+
+    public function musicCountByIsAdult(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return json_encode(['error' => '未登入，請先登入'], 401);
+        }
+        if (($parsed_token->role ?? null) !== 'admin') {
+            return ['error' => '權限不足'];
+        }
+
+        try {
+            $musicModel = new Music();
+            $result = $musicModel->countByIsAdult();
+            return [
+                'success' => true,
+                'data' => $result
+            ];
+        } catch (Exception $e) {
+            return [
+                'error' => '獲取分類數量失敗',
                 'detail' => $e->getMessage()
             ];
         }

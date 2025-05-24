@@ -87,7 +87,7 @@ class LoginController
         $payload = [
             'sub' => $user->member_id,
             'iat' => time(),
-            'exp' => time() + 3600*24, // 1 days
+            'exp' => time() + 3600 * 24, // 1 days
         ];
 
         $token = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
@@ -126,9 +126,9 @@ class LoginController
             $user = new User();
             $user->member_id = $parsed_token->sub;
             $user->verified_at = date('Y-m-d H:i:s', time());
-
+            
             try {
-                $user->save();
+                $user->update();
                 header("Location: $redirect_url");
                 exit;
             } catch (Exception $e) {
@@ -159,7 +159,7 @@ class LoginController
         $payload = [
             'sub' => $user->member_id,
             'iat' => time(),
-            'exp' => time() + 3600*24*7, // 7days
+            'exp' => time() + 3600 * 24 * 7, // 7days
             'role' => $user->role, // TODO: Add role
             'is_owner' => true,
         ];

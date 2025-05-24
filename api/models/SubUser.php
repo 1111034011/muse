@@ -162,5 +162,16 @@ class SubUser extends Model
         return $sub_user;
     }
 
+    public function countSubUsers(string $member_id)
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT COUNT(*) as count FROM sub_member WHERE Member_Id = :member_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':member_id', $member_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'];
+    }
+
 }
 

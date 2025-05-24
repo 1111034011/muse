@@ -62,7 +62,34 @@ class Music extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function countMusicByTag()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT mt.Tag_Id, mt.Tag_Name, COUNT(m.Music_Id) AS music_count
+            FROM music_tag mt
+            LEFT JOIN music m ON mt.Tag_Id = m.Tag_Id
+            GROUP BY mt.Tag_Id, mt.Tag_Name";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
+    public function countByIsAdult()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT Is_Adult, 
+                   CASE Is_Adult 
+                        WHEN 1 THEN '一般' 
+                        WHEN 0 THEN '兒童' 
+                        ELSE '未知' 
+                   END AS Is_Adult_Text,
+                   COUNT(*) AS count
+            FROM music
+            GROUP BY Is_Adult";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function countAllMusic()
     {

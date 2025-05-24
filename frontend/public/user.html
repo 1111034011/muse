@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/user.css" media="all">
     <link rel="stylesheet" href="css/index.css" media="all">
     <script src="js/front_side.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/cjs/index.min.js"></script>
 </head>
 <body>
     <div class="setbody">
@@ -23,8 +24,9 @@
             <h2 class="title">使用者</h2>
             <div class="left">
                 <div class="avatar"></div>
-                <div class="name">12</div>
-                <a href="Manage_permissions.html">查看權限</a>
+                <div class="name"></div>
+                <a href="Manage_permissions.html" id="view-permission-button">查看權限</a>
+
             </div>
             <div class="right">
                 <a href="peopleedit.html" class="button">修改個人資料</a>
@@ -35,6 +37,23 @@
         </main> 
         </div>
     </div>
+
+    <script>
+        // 取得 JWT Token
+        const token = localStorage.getItem('token');
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            document.querySelector('.name').textContent = decodedToken.username;
+            console.log(46,decodedToken);
+            const isOwner = decodedToken.is_owner;
+            if (isOwner == true) {
+                document.getElementById('view-permission-button').style.display = 'block';
+            }
+            
+        }
+    </script>
 </body>
+
+
 
 </html>

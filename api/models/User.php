@@ -29,7 +29,10 @@ class User extends Model
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':password', $this->password);
 
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            return $db->lastInsertId(); // 回傳 member_id
+        }
+        return false;
     }
 
     //login
@@ -197,7 +200,7 @@ class User extends Model
         $sql = "SELECT COUNT(*) as count FROM member";
         $stmt = $db->prepare($sql);
         $stmt->execute();
-        return$stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
         // return $result['count'];
     }
 }
