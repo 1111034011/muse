@@ -22,17 +22,20 @@ class AddMusicController extends Controller
     {
         $parsed_token = $this->verifyToken($request);
         if (!$parsed_token) {
-            return ['error' => '未登入，請先登入'];
+            return ['success' => false, 'error' => '未登入，請先登入'];
         }
 
         $playlist_id = $request->body()['playlist_id'] ?? null;
         $music_id = $request->body()['music_id'] ?? null;
 
+        if (!$playlist_id || !$music_id) {
+            return ['success' => false, 'error' => 'playlist_id 和 music_id 必填'];
+        }
 
         $playlistmusic = new PlaylistMusic();
         $existing_playlistmusic = $playlistmusic->findByMusicname($playlist_id, $music_id);
         if ($existing_playlistmusic) {
-            return ['error' => '此歌曲已被加入清單'];
+            return ['success' => false, 'error' => '此歌曲已被加入清單'];
         }
 
         $playlistmusic->playlist_id = $playlist_id;
@@ -40,9 +43,13 @@ class AddMusicController extends Controller
 
         try {
             $playlistmusic->save();
-            return ['success' => '註冊成功'];
+            return ['success' => true, 'message' => '加入成功'];
         } catch (Exception $e) {
-            return ['error' => '註冊失敗，請稍後再試', 'detail' => $e->getMessage()];
+            return [
+                'success' => false,
+                'error' => '加入失敗，請稍後再試',
+                'detail' => $e->getMessage()
+            ];
         }
     }
 }
