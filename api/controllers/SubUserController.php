@@ -230,5 +230,24 @@ class SubUserController extends Controller
         ];
     }
 
+    public function updateisadult(Request $request)
+    {
+        $parsed_token = $this->verifyToken($request);
+        if (!$parsed_token) {
+            return ['error' => '未登入，請先登入'];
+        }
+
+        $sub_user_id = $request->getParam('id');
+        $is_adult = $request->body()['is_adult'] ?? null;
+
+        try {
+            $sub_user = new SubUser();
+
+            $sub_user->updateIsAdult($sub_user_id, $is_adult);
+            return ['success' => '更新成功'];
+        } catch (Exception $e) {
+            return ['error' => '更新失敗，請稍後再試', 'detail' => $e->getMessage()];
+        }
+    }
 }
 

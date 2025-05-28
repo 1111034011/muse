@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="css/Backstage.css">
     <link rel="stylesheet" href="css/index.css" media="all">
     <link rel="stylesheet" href="css/Manage_permissions.css" media="all">
+    <link rel="stylesheet" href="css/model_pop.css" media="all">
+    <link rel="stylesheet" href="../RWD_Front.css" />
+    <link rel="icon" href="/front/img/icon.png">
     <script src="js/front_side.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>權限設定</title>
-
 </head>
 
 <body>
@@ -18,49 +20,124 @@
     <div id="sidebar-container"></div>
     <div class="main">
         <h2 class="title">權限</h2>
-        <button class="save-btn" onclick="openModal()">新增</button>
+        <!-- <button class="save-btn">新增</button> -->
         <div class="container" id="userList">
-            <!-- 動態生成 -->
-            <div class="user-item">
-                <span>大大</span>
+            <div class="user-item" id="user1">
+                <span class="user-label">大大(一般)</span>
                 <div class="user-controls">
-                    <button onclick="openModal(0)" class="edit">編輯</button>
-                    <button onclick="deleteUser(0)" class="del">刪除</button>
+                    <select class="is_adult" id="changeForm">
+                        <option value="1" selected>一般</option>
+                        <option value="0">青少年</option>
+                    </select>
+                    <button class="del">刪除</button>
                 </div>
             </div>
-            <div class="user-item">
-                <span>黃黃</span>
-                <div class="user-controls">
-                    <button onclick="openModal(0)" class="edit">編輯</button>
-                    <button onclick="deleteUser(0)" class="del">刪除</button>
-                </div>
-            </div>
-            <div class="user-item">
-                <span>石</span>
-                <div class="user-controls">
-                    <button onclick="openModal(0)" class="edit">編輯</button>
-                    <button onclick="deleteUser(0)" class="del">刪除</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal" id="userModal">
-            <h3 id="modalTitle" class="modalTitle">使用者設定</h3>
-            <label id="usernameLabel">帳號:
-                <span id="usernameText"></span>
-                <input type="text" id="username" style="display: none;">
-            </label>
-            <label id="passwordLabel">密碼:<input type="password" id="password"></label>
-            <label>權限
-                <select id="role">
-                    <option value="一般">一般</option>
-                    <option value="青少年">青少年</option>
-                </select>
-            </label>
-            <button id="confirmBtn" class="modelbyes">確認</button>
-            <button onclick="closeModal()" class="modelbno">取消</button>
         </div>
     </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        const member_data = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/api/sub-users", {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+
+                console.log("API 回傳的物件：", data);
+
+                console.log(JSON.stringify(data));
+                renderUsers(data);
+
+                return data;
+
+            } catch (error) {
+                console.error("錯誤：", error);
+            }
+        };
+
+        function renderUsers(data) {
+            if (data && data.success && Array.isArray(data.users)) {
+                const container = document.getElementById('userList');
+                container.innerHTML = '';
+                data.users.forEach(user => {
+                    if (Number(user.is_owner) === 1) return;
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.innerHTML = `
+                <span class="user-label">${user.username}</span>
+                <div class="user-controls">
+                    <select class="is_adult">
+                        <option value="1" ${user.role == 1 ? 'selected' : ''}>一般</option>
+                        <option value="0" ${user.role == 0 ? 'selected' : ''}>青少年</option>
+                    </select>
+                    <button class="del">刪除</button>
+                </div>
+            `;
+                    container.appendChild(userItem);
+                });
+                document.getElementById('changeForm').addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    update();
+                });
+                const update = () => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const submemberId = urlParams.get('sub_member_id');
+                    const formData = {
+                        is_adult: document.getElementById('is_adult').value
+                    };
+
+                    const data = JSON.stringify(formData)
+                    console.log(JSON.stringify(formData));
+                    fetch(`http://localhost:8000/api/sub-users/${submemberId}`, {
+                        // 設定為 POST 請求
+                        method: 'POST',
+                        // credentials: 'include',
+                        // 在 headers 加入 json 格式
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        },
+                        // 傳送內容須轉換為字串
+                        body: data,
+                    })
+                        .then(res => {
+                            if (!res.ok) {
+                                throw new Error('Network response was not ok ' + res.statusText);
+                            }
+                            return res.json();
+                        })
+                        .then(body => {
+                            console.log(body);
+                            const div = document.getElementById('changeForm');
+                            div.innerHTML = '';
+                            const message = body.success || body.error || '未知錯誤';
+                            const span = document.createElement('span');
+                            span.innerText = message;
+                            div.appendChild(span);
+                        })
+
+                        .catch(error => {
+                            console.error("Fetch Error:", error);
+                            alert("請求失敗，請檢查 API 是否運行！");
+                        });
+                };
+                console.log(`已渲染 ${data.users.length} 個用戶資料到頁面`);
+            } else {
+                console.error("API 返回的數據格式不符合預期:", data);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            member_data();
+        });
+    </script>
 </body>
 
 </html>
