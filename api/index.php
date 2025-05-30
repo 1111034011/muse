@@ -54,6 +54,8 @@ $app->router->get('/api/sub-users/:id', [SubUserController::class, 'get']);
 $app->router->patch('/api/sub-users/:id', [SubUserController::class, 'update']);
 $app->router->delete('/api/sub-users/:id', [SubUserController::class, 'delete']);
 $app->router->post('/api/sub-users/login', [SubUserController::class, 'login']);
+$app->router->post('/api/sub-users/:id', [SubUserController::class, 'updateisadult']);
+
 // $app->router->post('/api/Login/add', [LoginController::class, 'add']);
 // FIXME: Rename to $app->router->patch('/api/me', [UserController::class, 'update']);
 $app->router->post('/api/Login/Imedit', [LoginController::class, 'Imedit']);

@@ -46,7 +46,7 @@ class SubUser extends Model
             'member_id' => 'Member_Id',
             'username' => 'Username',
             'pin_num' => 'Pin_Num',
-            'preferences' => 'Preferences'
+            'preferences' => 'Preferences',
         ];
 
         foreach ($fieldMappings as $property => $dbField) {
@@ -71,7 +71,7 @@ class SubUser extends Model
     {
         $db = Database::getConnection();
 
-        $sql = "SELECT Sub_Member_Id, Member_Id, Username, Preferences FROM sub_member WHERE Member_Id = :member_id";
+        $sql = "SELECT Sub_Member_Id, Member_Id, Username, Is_Owner FROM sub_member WHERE Member_Id = :member_id";
         $stmt = $db->prepare($sql);
 
         $stmt->bindParam(':member_id', $member_id);
@@ -84,7 +84,8 @@ class SubUser extends Model
                 'sub_member_id' => $item['Sub_Member_Id'],
                 'member_id' => $item['Member_Id'],
                 'username' => $item['Username'],
-                'preferences' => !empty($item['Preferences']) ? json_decode($item['Preferences'], true) : null
+                'is_owner' => $item['Is_Owner'],
+                // 'preferences' => !empty($item['Preferences']) ? json_decode($item['Preferences'], true) : null
             ];
         }, $rows);
     }
@@ -173,5 +174,15 @@ class SubUser extends Model
         return $result['count'];
     }
 
+
+    public function updateIsAdult($sub_member_id, $is_adult)
+    {
+        $db = Database::getConnection();
+        $sql = "UPDATE sub_member SET Is_Adult = :is_adult WHERE Sub_Member_Id = :sub_member_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':is_adult', $is_adult, PDO::PARAM_BOOL);
+        $stmt->bindParam(':sub_member_id', $sub_member_id);
+        return $stmt->execute();
+    }
 }
 
