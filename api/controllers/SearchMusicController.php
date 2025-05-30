@@ -33,7 +33,7 @@ class SearchMusicController{
 
             $search = addslashes($search);
             
-            $pagedRecordsQuery = "SELECT Music_ID, Music_Name, Artist, Album, Music_URL 
+            $pagedRecordsQuery = "SELECT Music_ID, Music_Name, Artist, Music_URL 
                         FROM Music 
                         WHERE Music_Name LIKE '%$search%' OR Artist LIKE '%$search%'
                         ORDER BY Music_Name

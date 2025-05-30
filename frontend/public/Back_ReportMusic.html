@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>MB 編輯檢舉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/back.css">
+  <link rel="stylesheet" href="css/BackSet.css">
+  <link rel="stylesheet" href="css/back_editmusic.css">
+  <link rel="stylesheet" href="css/RWD_Back.css">
+  <link rel="icon" href="img/icon.png">
+  <script src="js/side.js"></script>
+</head>
+
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+  <!-- 這個 div 用來插入側邊欄 -->
+  <div id="sidebar-container"></div>
+  <div class="header">
+    <h1>編輯歌曲</h1>
+  </div>
+
+  <!-- 主內容 -->
+  <div class="main">
+    <form class="music-edit-form" method="post">
+    <!-- <form class="music-edit-form"> -->
+      <div class="form-row">
+        <div class="input-group">
+          <label for="song-name">歌曲名稱</label>
+          <input type="text" id="song-name" placeholder="說好不哭" disabled>
+        </div>
+        <div class="input-group">
+          <label for="artist-name">歌手名稱</label>
+          <input type="text" id="artist-name" placeholder="周杰倫" disabled>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="song-type">類型</label>
+          <select id="song-type">
+            <option value="" disabled selected>流行</option>
+            <option value="pop">流行</option>
+            <option value="rock">搖滾</option>
+            <option value="hiphop">嘻哈</option>
+            <option value="electro">電子</option>
+            <option value="jazz">爵士</option>
+            <option value="classical">古典</option>
+            <option value="blues">藍調</option>
+            <option value="country">鄉村</option>
+            <option value="reggae">雷鬼</option>
+            <option value="rnb">R&B</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="restriction" disabled selected>限制</label>
+          <select id="restriction">
+            <option value="">普通</option>
+            <option value="pop">普通</option>
+            <option value="rock">限制</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row-btn">
+        <button class="btn"  type="button" onclick="location.href='BackReport.html'">編輯音樂</button>
+        <button class="btn"  type="button" onclick="location.href='BackReport.html'">返回檢舉</button>
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>

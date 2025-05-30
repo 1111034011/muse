@@ -1,0 +1,307 @@
+@media (max-width: 767px) {
+  .main {
+    padding: 25px;
+  }
+
+  .dashboard-cards {
+    flex-direction: column !important;
+    /* 橫向改為縱向 */
+    gap: 16px;
+  }
+
+  .card {
+    width: 100% !important;
+  }
+
+  .hot-tracks {
+    flex-direction: column !important;
+    /* 橫向改為縱向 */
+    gap: 12px;
+  }
+
+  #sidebar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+  }
+
+  .sidebar-toggle {
+    display: block;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    border: 1px solid #ccc;
+    padding: 8px;
+    z-index: 1100;
+  }
+
+  .search-bar {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    /* 元素拉伸至滿寬 */
+  }
+
+  .search-container {
+    width: 100%;
+    display: flex;
+  }
+
+  .search-container input {
+    flex: 1;
+    min-width: 0;
+    /* 防止縮小到無法顯示 */
+  }
+
+  .search-bar select,
+  .search-bar .upload {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .song-table thead {
+    display: none;
+  }
+
+  .song-table tr {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    margin-left: 8px;
+  }
+
+  .song-table tr img {
+    width: 100%;
+    height: auto;
+  }
+
+  .song-table tr th {
+    width: 100%;
+  }
+
+
+  .song-table td {
+    padding: 0px;
+    text-align: left;
+  }
+
+
+  .btn-edit,
+  .btn-delete {
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  #pagination {
+    display: flex;
+    flex-wrap: wrap;
+    /* 按鈕換行 */
+    gap: 8px;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  #pagination button {
+    flex: 1 1 auto;
+    /* 自適應寬度 */
+  }
+
+  .user-list {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .user-head {
+    display: none;
+  }
+
+  .user-item:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    width: 100%;
+  }
+
+  #pagination button {
+    width: 25%;
+    padding: 8px;
+    font-size: 16px;
+  }
+
+  .setting-group {
+    padding: 20px;
+  }
+
+  .setting-group p {
+    font-size: 20px;
+  }
+
+  .setting-group h2 {
+    font-size: 24px;
+  }
+
+  .btn {
+    font-size: 18px;
+    padding: 10px;
+  }
+
+  /* 調整報表主區域的 margin */
+  .report-main {
+    margin-top: 20px;
+  }
+
+  /* 讓表格更適應手機螢幕，將表格內容變為塊狀 */
+  .report-table,
+  .report-table thead,
+  .report-table tbody,
+  .report-table th,
+  .report-table td,
+  .report-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  /* 隱藏表頭，因為會用 data-label 來替代 */
+  .report-table thead {
+    display: none;
+  }
+
+  /* 表格的每行顯示為塊狀並加上一些間距 */
+  .report-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #2b2b3d;
+  }
+
+  /* 讓每個欄位的內容對齊並加上 label */
+  .report-table td {
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #444;
+    background-color: transparent;
+  }
+
+  /* 每個欄位前面會有標籤，指明欄位名稱 */
+  .report-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    top: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+    color: #ccc;
+  }
+
+  /* 讓按鈕寬度填滿卡片 */
+  .approve-btn,
+  .reject-btn {
+    width: 100%;
+    margin: 8px 0;
+    font-size: 16px;
+  }
+
+  .td-btn {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    width: 90%;
+    margin-bottom: 30px;
+  }
+
+}
+
+@media (min-width: 1024px) {
+  #sidebar-container {
+    display: block !important;
+    position: static;
+    height: auto;
+    box-shadow: none;
+  }
+
+  .header h1 {
+    font-size: 30px;
+  }
+
+  .setting-group {
+    padding: 32px;
+  }
+
+  .setting-group h2 {
+    font-size: 28px;
+  }
+
+  .setting-group p {
+    font-size: 24px;
+  }
+
+  .form-row {
+    gap: 24px;
+    padding: 30px;
+  }
+
+  .form-row button {
+    font-size: 22px;
+  }
+
+  .modal-content {
+    width: 50%;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .song-item {
+    display: grid;
+    grid-template-columns: 50px 1fr 1fr 1fr 1fr auto auto;
+    /* 歌曲項目網格排列 */
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .song-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    /*奇怪但就是 圖片保持比例並裁切 */
+  }
+
+  .user-head,
+  .user-item {
+    display: flex;
+    justify-content: space-between;
+    /* 用戶頭部和項目水平分布 */
+    align-items: center;
+  }
+
+  #pagination button {
+    padding: 8px 16px;
+    font-size: 18px;
+  }
+
+  .search-bar {
+    width: 95%;
+  }
+}

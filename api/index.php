@@ -9,6 +9,8 @@ namespace project;
 
 use Dotenv\Dotenv;
 use project\controllers\LoginController;
+use project\controllers\PlayMusicController;
+use project\controllers\SearchMusicController;
 use project\core\Application;
 use project\controllers\SubUserController;
 use project\controllers\BackstageController;
