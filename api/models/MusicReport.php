@@ -38,6 +38,7 @@ class MusicReport extends Model
     }
 
 
+    
     public function updateIsAdult($music_id, $is_adult)
     {
         $db = Database::getConnection();
