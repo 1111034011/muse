@@ -61,7 +61,6 @@
   </div>
   </div>
 </body>
-<script type="text/javascript">
   var myChart = echarts.init(document.getElementById('statistics'));
   option = {
     tooltip: {
@@ -114,6 +113,192 @@
     myChart.resize();
   });
   resizeObserver.observe(chartDom);
+</script> -->
+<!-- <script type="text/javascript">
+  function isMobile() {
+    return window.innerWidth <= 767;
+  }
+
+  var myChart = echarts.init(document.getElementById('statistics'));
+
+  var option = {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      show: !isMobile(), // 手機板隱藏
+      top: '5%',
+      left: 'center',
+      textStyle: { color: '#fff' },
+      selectedMode: false
+    },
+    series: [
+      {
+        name: '',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: false,
+          position: 'center',
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 40,
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: []
+      }
+    ]
+  };
+  myChart.setOption(option);
+
+  fetch('http://localhost:8000/api/Backstage/musicCountByTag')
+    .then(response => response.json())
+    .then(res => {
+      if (res.success && Array.isArray(res.data)) {
+        const chartData = res.data.map(item => ({
+          value: item.music_count,
+          name: `${item.Tag_Name}${item.music_count}首`
+        }));
+        myChart.setOption({
+          series: [{
+            data: chartData
+          }]
+        });
+      }
+    })
+    .catch(error => {
+      console.error('取得音樂分類資料失敗:', error);
+    });
+
+  // 響應式調整
+  const chartDom = document.getElementById('statistics');
+  const resizeObserver = new ResizeObserver(() => {
+    myChart.resize();
+    // 每次 resize 判斷是否要顯示 legend
+    myChart.setOption({
+      legend: {
+        show: !isMobile()
+      }
+    });
+  });
+  resizeObserver.observe(chartDom);
+
+  // 如果使用者改變視窗大小，及時調整 legend
+  window.addEventListener('resize', function () {
+    myChart.setOption({
+      legend: {
+        show: !isMobile()
+      }
+    });
+  });
+</script> -->
+<script type="text/javascript">
+  function isMobile() {
+    return window.innerWidth <= 767;
+  }
+
+  var myChart = echarts.init(document.getElementById('statistics'));
+  var currentApi = 'musicCountByTag'; // 預設顯示音樂分類
+
+  // 通用圖表配置
+  var baseOption = {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      show: !isMobile(),
+      top: '5%',
+      left: 'center',
+      textStyle: { color: '#fff' },
+      selectedMode: false
+    },
+    series: [{
+      type: 'pie',
+      radius: ['40%', '70%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      label: { show: false },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 40,
+          fontWeight: 'bold'
+        }
+      },
+      labelLine: { show: false },
+      data: []
+    }]
+  };
+
+  // 切換標籤功能
+  function switchTab(tab) {
+    document.querySelector('.chose1').classList.remove('active');
+    document.querySelector('.chose2').classList.remove('active');
+    document.querySelector(tab === 1 ? '.chose1' : '.chose2').classList.add('active');
+    
+    currentApi = tab === 1 ? 'musicCountByTag' : 'musicCountByIsAdult';
+    loadChartData();
+  }
+
+  // 載入資料函式
+  function loadChartData() {
+    const apiUrl = `http://localhost:8000/api/Backstage/${currentApi}`;
+    
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(res => {
+        if (res.success && Array.isArray(res.data)) {
+          const chartData = res.data.map(item => ({
+            value: item.music_count || item.count, // 兼容兩個API的字段
+            name: currentApi === 'musicCountByTag' 
+              ? `${item.Tag_Name}${item.music_count}首` 
+              : `${item.Is_Adult_Text}${item.count}首`
+          }));
+          
+          myChart.setOption({
+            ...baseOption,
+            series: [{ data: chartData }]
+          });
+        }
+      })
+      .catch(console.error);
+  }
+
+  // 初始化圖表
+  myChart.setOption(baseOption);
+  loadChartData();
+
+  // 綁定點擊事件
+  document.querySelector('.chose1').addEventListener('click', () => switchTab(1));
+  document.querySelector('.chose2').addEventListener('click', () => switchTab(2));
+
+  // 響應式調整
+  const chartDom = document.getElementById('statistics');
+  const resizeObserver = new ResizeObserver(() => {
+    myChart.resize();
+    myChart.setOption({ legend: { show: !isMobile() } });
+  });
+  resizeObserver.observe(chartDom);
+
+  window.addEventListener('resize', () => {
+    myChart.setOption({ legend: { show: !isMobile() } });
+  });
 </script>
 
 </html>
