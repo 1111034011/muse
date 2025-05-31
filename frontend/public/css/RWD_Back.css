@@ -39,7 +39,6 @@
 
   .search-bar {
     flex-direction: column;
-    /* 搜索欄的項目縱向排列 */
     gap: 12px;
     align-items: stretch;
     /* 元素拉伸至滿寬 */
@@ -122,7 +121,7 @@
     display: none;
   }
 
-  .user-item {
+  .user-item:last-child {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -223,6 +222,7 @@
 @media (max-width: 768px) {
   .search-bar {
     width: 90%;
+    margin-bottom: 30px;
   }
 
 }

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MB 系統統計</title>
+  <link rel="stylesheet" href="css/back.css">
+  <link rel="stylesheet" href="css/BackSet.css">
+  <link rel="stylesheet" href="css/RWD_Back.css">
+  <script src="js/pop.js"></script>
+  <script src="js/side.js"></script>
+  <script src="js/echarts.js"></script>
+  <link rel="icon" href="img/icon.png">
+  <styLE>
+    #statistics {
+      width: 100%;
+      min-height: 520px;
+    }
+
+    @media (max-width: 767px) {
+      #statistics {
+        width: 100%;
+        min-height: 380px;
+      }
+
+      .chose1,
+      .chose2 {
+        padding: 12px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .chose1,
+      .chose2 {
+        font-size: 20px;
+      }
+    }
+  </styLE>
+</head>
+
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+
+  <!-- 側邊欄 -->
+  <div id="sidebar-container"></div>
+  <!-- 主內容 -->
+
+  <div class="main">
+    <div class="header">
+      <h1>數據總覽</h1>
+    </div>
+    <div class="chose">
+      <div class="chose1 active" style="cursor: pointer;">音樂分類</div>
+      <div class="chose2" style="cursor: pointer;">音樂管制</div>
+    </div>
+    <div class="content">
+      <div id="statistics">
+      </div>
+    </div>
+  </div>
+  </div>
+</body>
+<script type="text/javascript">
+  var myChart = echarts.init(document.getElementById('statistics'));
+  option = {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      top: '5%',
+      left: 'center',
+      textStyle: { color: '#fff' },
+      selectedMode: false
+    },
+    series: [
+      {
+        name: '',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: false,
+          position: 'center',
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 40,
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 1048, name: '流行1048首' },
+          { value: 735, name: '搖滾735首' },
+          { value: 580, name: '嘻哈580首' },
+          { value: 484, name: '爵士484首' },
+          { value: 300, name: '古典300首' }
+        ]
+      }
+    ]
+  };
+  myChart.setOption(option);
+  const chartDom = document.getElementById('statistics');
+  const resizeObserver = new ResizeObserver(() => {
+    myChart.resize();
+  });
+  resizeObserver.observe(chartDom);
+</script>
+
+</html>
