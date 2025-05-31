@@ -87,7 +87,7 @@ class SubUser extends Model
                 'is_owner' => $item['Is_Owner'],
                 'is_adult' => $item['Is_Adult'],
                 // 'preferences' => !empty($item['Preferences']) ? json_decode($item['Preferences'], true) : null
-            ];
+            ]; 
         }, $rows);
     }
 
