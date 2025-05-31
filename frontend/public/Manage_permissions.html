@@ -29,7 +29,7 @@
                         <option value="1" selected>一般</option>
                         <option value="0">青少年</option>
                     </select>
-                    <button class="del">刪除</button>
+                    <!-- <button class="del">刪除</button> -->
                 </div>
             </div>
         </div>
@@ -68,75 +68,66 @@
                 container.innerHTML = '';
                 data.users.forEach(user => {
                     if (Number(user.is_owner) === 1) return;
+
                     const userItem = document.createElement('div');
                     userItem.className = 'user-item';
                     userItem.innerHTML = `
                 <span class="user-label">${user.username}</span>
                 <div class="user-controls">
-                    <select class="is_adult">
-                        <option value="1" ${user.role == 1 ? 'selected' : ''}>一般</option>
-                        <option value="0" ${user.role == 0 ? 'selected' : ''}>青少年</option>
+                    <select class="is_adult" data-sub-id="${user.sub_member_id}">
+                        <option value="1" ${user.is_adult == 1 ? 'selected' : ''}>一般</option>
+                        <option value="0" ${user.is_adult == 0 ? 'selected' : ''}>青少年</option>
                     </select>
-                    <button class="del">刪除</button>
                 </div>
             `;
                     container.appendChild(userItem);
                 });
-                document.getElementById('changeForm').addEventListener('submit', function (event) {
-                    event.preventDefault();
-                    update();
+
+                // 綁定每個 select 的 change 事件
+                document.querySelectorAll('.is_adult').forEach(select => {
+                    select.addEventListener('change', (e) => {
+                        const subMemberId = e.target.getAttribute('data-sub-id');
+                        const isAdultValue = e.target.value;
+                        update(subMemberId, isAdultValue);
+                    });
                 });
-                const update = () => {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const submemberId = urlParams.get('sub_member_id');
-                    const formData = {
-                        is_adult: document.getElementById('is_adult').value
-                    };
 
-                    const data = JSON.stringify(formData)
-                    console.log(JSON.stringify(formData));
-                    fetch(`http://localhost:8000/api/sub-users/${submemberId}`, {
-                        // 設定為 POST 請求
-                        method: 'POST',
-                        // credentials: 'include',
-                        // 在 headers 加入 json 格式
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + localStorage.getItem('token')
-                        },
-                        // 傳送內容須轉換為字串
-                        body: data,
-                    })
-                        .then(res => {
-                            if (!res.ok) {
-                                throw new Error('Network response was not ok ' + res.statusText);
-                            }
-                            return res.json();
-                        })
-                        .then(body => {
-                            console.log(body);
-                            const div = document.getElementById('changeForm');
-                            div.innerHTML = '';
-                            const message = body.success || body.error || '未知錯誤';
-                            const span = document.createElement('span');
-                            span.innerText = message;
-                            div.appendChild(span);
-                        })
-
-                        .catch(error => {
-                            console.error("Fetch Error:", error);
-                            alert("請求失敗，請檢查 API 是否運行！");
-                        });
-                };
                 console.log(`已渲染 ${data.users.length} 個用戶資料到頁面`);
             } else {
                 console.error("API 返回的數據格式不符合預期:", data);
             }
         }
 
+
+
         document.addEventListener('DOMContentLoaded', () => {
             member_data();
         });
+
+        const update = (subMemberId, isAdultValue) => {
+            const formData = {
+                is_adult: isAdultValue
+            };
+
+            fetch(`http://localhost:8000/api/sub-users/${subMemberId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify(formData),
+            })
+                .then(res => res.json())
+                .then(body => {
+                    console.log("更新結果：", body);
+                    alert(body.success ? "更新成功！" : "更新失敗！");
+                })
+                .catch(error => {
+                    console.error("Fetch Error:", error);
+                    alert("請求失敗，請檢查 API 是否正常！");
+                });
+        };
+
     </script>
 </body>
 

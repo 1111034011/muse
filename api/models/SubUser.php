@@ -71,7 +71,7 @@ class SubUser extends Model
     {
         $db = Database::getConnection();
 
-        $sql = "SELECT Sub_Member_Id, Member_Id, Username, Is_Owner FROM sub_member WHERE Member_Id = :member_id";
+        $sql = "SELECT Sub_Member_Id, Member_Id, Username, Is_Owner, Is_Adult FROM sub_member WHERE Member_Id = :member_id";
         $stmt = $db->prepare($sql);
 
         $stmt->bindParam(':member_id', $member_id);
@@ -85,6 +85,7 @@ class SubUser extends Model
                 'member_id' => $item['Member_Id'],
                 'username' => $item['Username'],
                 'is_owner' => $item['Is_Owner'],
+                'is_adult' => $item['Is_Adult'],
                 // 'preferences' => !empty($item['Preferences']) ? json_decode($item['Preferences'], true) : null
             ];
         }, $rows);
