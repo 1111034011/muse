@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>MB-編輯音樂</title>
+  <link rel="stylesheet" href="css/back.css">
+  <link rel="stylesheet" href="css/BackSet.css">
+  <link rel="stylesheet" href="css/back_editmusic.css">
+  <script src="js/side.js"></script>
+</head>
+
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+  <!-- 這個 div 用來插入側邊欄 -->
+  <div id="sidebar-container"></div>
+  <div class="header">
+    <h1>編輯歌曲</h1>
+  </div>
+
+  <!-- 主內容 -->
+  <div class="main">
+    <form id="editMusicForm" class="music-edit-form" action="Backmusic.html" method="post">
+      <input type="hidden" id="music-id">
+      <div class="form-row">
+        <div class="input-group">
+          <label for="song-name">歌曲名稱</label>
+          <input type="text" id="music_name" placeholder="輸入歌曲名稱">
+        </div>
+        <div class="input-group">
+          <label for="artist-name">歌手名稱</label>
+          <input type="text" id="artist" placeholder="輸入歌手名稱">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="song-type">類型</label>
+          <select id="tag_id">
+            <option value="" disabled selected>選擇歌曲類型</option>
+            <option value="1">流行</option>
+            <option value="2">搖滾</option>
+            <option value="3">嘻哈</option>
+            <option value="4">電子</option>
+            <option value="5">爵士</option>
+            <option value="6">古典</option>
+            <option value="7">藍調</option>
+            <option value="8">鄉村</option>
+            <option value="9">雷鬼</option>
+            <option value="10">R&B</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="restriction">限制</label>
+          <select id="is_adult">
+            <option value="" disabled selected>選擇輸入限制</option>
+            <option value="1">一般</option>
+            <option value="0">兒童</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group" style="width: 100%;">
+          <label for="song-file">歌曲網址</label>
+          <input type="text" id="music_url" placeholder="輸入歌曲網址">
+        </div>
+      </div>
+
+      <!-- <div class="form-row">
+        <div class="input-group" style="width: 100%;">
+          <label for="cover-file">封面檔案</label>
+          <input type="file" id="cover-file" accept="image/*">
+        </div>
+      </div> -->
+
+      <div class="form-row-btn">
+        <button class="btn" type="submit">編輯音樂</button>
+        <button class="btn" type="button" onclick="window.location.href='BackReport.html'">返回歌曲</button>
+      </div>
+    </form>
+  </div>
+</body>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const musicId = urlParams.get('music_id');
+
+    if (!musicId) {
+      alert('缺少 music_id，請從歌曲列表正確點擊進入。');
+      window.location.href = 'BackReport.html';
+      return;
+    }
+
+    document.getElementById('music-id').value = musicId;
+    // console.log(musicId);
+    fetch(`http://localhost:8000/api/Backstage/music/${musicId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+    })
+      .then(res => res.json())
+      .then(body => {
+        // console.log(body);
+        if (body.data) {
+          const music = body.data;
+          document.getElementById('music_name').value = music.music_name;
+          document.getElementById('artist').value = music.artist;
+          document.getElementById('music_url').value = music.music_url;
+          document.getElementById('tag_id').value = music.tag_id;
+          document.getElementById('is_adult').value = music.is_adult;
+
+        } else {
+          alert('載入失敗：' + (body.error || '未知錯誤'));
+          window.location.href = 'BackReport.html';
+        }
+      })
+      .catch(error => {
+        console.error('Fetch Error:', error);
+        alert('連線失敗，請檢查伺服器。');
+      });
+  });
+
+
+  document.getElementById('editMusicForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    update();
+  });
+  const update = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const musicId = urlParams.get('music_id');
+    const formData = {
+      music_name: document.getElementById('music_name').value.trim(),
+      artist: document.getElementById('artist').value.trim(),
+      music_url: document.getElementById('music_url').value.trim(),
+      is_adult: document.getElementById('is_adult').value,
+      tag_id: document.getElementById('tag_id').value
+    };
+
+    const data = JSON.stringify(formData)
+    console.log(JSON.stringify(formData));
+    fetch(`http://localhost:8000/api/Backstage/music/${musicId}`, {
+      // 設定為 POST 請求
+      method: 'PATCH',
+      // credentials: 'include',
+      // 在 headers 加入 json 格式
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+      // 傳送內容須轉換為字串
+      body: data,
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok ' + res.statusText);
+        }
+        return res.json();
+      })
+      .then(body => {
+        console.log(body);
+        const div = document.getElementById('editMusicForm');
+        div.innerHTML = '';
+        const message = body.success || body.error || '未知錯誤';
+        const span = document.createElement('span');
+        span.innerText = message;
+        div.appendChild(span);
+      })
+
+      .catch(error => {
+        console.error("Fetch Error:", error);
+        alert("請求失敗，請檢查 API 是否運行！");
+      });
+  };
+</script>
+
+</html>

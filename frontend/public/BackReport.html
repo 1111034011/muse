@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MB 檢舉設定</title>
+  <link rel="stylesheet" href="css/back.css">
+  <link rel="stylesheet" href="css/BackSet.css">
+  <link rel="stylesheet" href="css/back_report.css">
+  <link rel="stylesheet" href="../RWD_Back.css">
+  <script src="js/side.js"></script>
+  <link rel="icon" href="../front/img/icon.png">
+</head>
+
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+
+  <!-- 側邊欄 -->
+  <div id="sidebar-container"></div>
+  <!-- 主內容 -->
+  <div class="main">
+    <div class="header">
+      <h1>檢舉審核</h1>
+    </div>
+    <div class="report-main" id="musicContainer">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>歌曲名稱</th>
+            <th>目前狀態</th>
+            <th>檢舉時間</th>
+            <th>操作內容</th>
+            <th>審核動作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="歌曲名稱">說好不哭</td>
+            <td data-label="目前狀態">一般</td>
+            <td data-label="檢舉時間">2025-05-10 14:32</td>
+            <td data-label="操作內容">
+              <!-- <button class="approve-btn" onclick="location.href='Back_EditMusic.html'">查看 / 編輯</button> -->
+              <a href="Back_ReportMusic.html" class="approve-btn">查看 / 編輯</a>
+
+            </td>
+            <td data-label="審核動作">
+              <button class="approve-btn">確認</button>
+              <button class="reject-btn">取消</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('token');
+
+    const member_data = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/MusicReport/list", {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        console.log("API 回傳的物件：", data);
+
+        console.log(JSON.stringify(data));
+
+        renderUsers(data);
+
+        return data;
+
+      } catch (error) {
+        console.error("錯誤：", error);
+      }
+    };
+
+    function renderUsers(data) {
+      console.log("API 回傳資料：", data);
+
+      const musicList = data.data;
+
+      if (!Array.isArray(musicList)) {
+        console.error("data.data 不是陣列：", musicList);
+        return;
+      }
+
+      const tbody = document.querySelector('.report-table tbody');
+      tbody.innerHTML = ''; // 清空表格內容
+
+      musicList.forEach(music => {
+        let statusText = '未知';
+        if (music.Is_Adult == 0) statusText = '兒童';
+        else if (music.Is_Adult == 1) statusText = '一般';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+      <td data-label="歌曲名稱">${music.Music_Name}</td>
+      <td data-label="目前狀態">${statusText}</td>
+      <td data-label="檢舉時間">${music.Created_At || ''}</td>
+      <td data-label="操作內容">
+                <a href="Back_ReportMusic.html?music_id=${music.Music_Id}" class="approve-btn">編輯</a>
+
+      </td>
+      <td data-label="審核動作">
+        <button class="approve-btn" onclick="approveReport('${music.Report_Id}')">確認</button>
+        <button class="reject-btn" onclick="deleteReport('${music.Report_Id}')">取消</button>
+      </td>
+    `;
+        tbody.appendChild(tr);
+      });
+
+      console.log(`✅ 已渲染 ${musicList.length} 筆檢舉資料`);
+    }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+      member_data();
+    });
+
+    function approveReport(reportId) {
+      if (!confirm("確定要確認這個檢舉嗎？")) return;
+
+      fetch(`http://localhost:8000/api/MusicReport/delete/${reportId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        }
+      })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log(data);
+          if (data.success) {
+            alert("檢舉確認成功！");
+            member_data(); // 重新載入資料
+          } else {
+            alert("確認失敗：" + (data.message || '未知錯誤'));
+          }
+        })
+        .catch(error => {
+          console.error("確認時發生錯誤：", error);
+          alert("確認時發生錯誤，請稍後再試");
+        });
+    }
+
+    function deleteReport(reportId) {
+      if (!confirm("確定要取消這個檢舉嗎？此操作將刪除檢舉記錄。")) return;
+
+      fetch(`http://localhost:8000/api/MusicReport/delete/${reportId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        }
+      })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log(data);
+          if (data.success) {
+            alert("檢舉已取消並刪除！");
+            member_data(); // 重新載入資料
+          } else {
+            alert("刪除失敗：" + (data.message || '未知錯誤'));
+          }
+        })
+        .catch(error => {
+          console.error("刪除時發生錯誤：", error);
+          alert("刪除時發生錯誤，請稍後再試");
+        });
+    }
+
+  </script>
+</body>
+
+</html>

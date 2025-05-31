@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="css/Backstage.css">
     <link rel="stylesheet" href="css/music.css" media="all">
     <link rel="stylesheet" href="css/play.css" media="all">
-    <link rel="stylesheet" href="../RWD_Front.css"/>
-    <link rel="icon" href="/front/img/icon.png">
+    <link rel="stylesheet" href="../RWD_Front.css" />
+    <link rel="icon" href="./front/img/icon.png">
     <script src="js/front_side.js"></script>
+
 </head>
 
 <body>
@@ -23,60 +24,171 @@
         <div id="sidebar-container"></div>
 
         <div class="main">
-                <div class="top">
-                    <div class="song-container">
-                        <div class="song-image">
-                            <img src="img/Tomboy.jpg" alt="我是音樂">
-                        </div>
-                        <div class="song-info">
-                            <h1>Tomboy</h1>
-                            <p>gidle</p>
-                            <p>流行</p>
-                        </div>
+            <div class="top">
+                <div class="song-container" style="position: relative;">
+                    <div class="song-image">
+                        <img id="song-cover" src="./img/1.webp" alt="音樂封面">
                     </div>
+                    <div class="song-info">
+                        <h1 id="song-title">載入中...</h1>
+                        <p id="song-artist">未知歌手</p>
+                    </div>
+                    <button class="flag-icon" title="檢舉" style="    background-color: transparent;  padding: 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                            class="bi bi-flag-fill" viewBox="0 0 16 16" color="black">
+                            <path
+                                d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12 12 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A20 20 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a20 20 0 0 0 1.349-.476l.019-.007.004-.002h.001" />
+                        </svg>
+                    </button>
                 </div>
+            </div>
 
-                <div class="Play_Bar">
-                    <div class="track-info">
-                        <span class="track-title">播放中：</span>
-                    </div>
-                    <div class="controls">
-                        <button id="play-pause" class="btn btn-dark">
-                            <span id="play-icon">
-                                <!-- 播放 SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393" />
-                                </svg>
-                            </span>
-                            <span id="pause-icon" style="display: none;">
-                                <!-- 暫停 SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5" />
-                                </svg>
-                            </span>
-                        </button>
+            <DIV class="video" style="margin-top: 500PX;">
+            </DIV>
 
-                        <span id="current-time">0:00</span>
-                        <input type="range" id="seek-bar" value="0" min="0" max="100" />
-                        <span id="duration">0:00</span>
-                    </div>
-                    <div class="volume-control">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-volume-down-fill" viewBox="0 0 16 16" style="margin: 5px;">
-                            <path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12zm3.025 4a4.5 4.5 0 0 1-1.318 3.182L10 10.475A3.5 3.5 0 0 0 11.025 8 3.5 3.5 0 0 0 10 5.525l.707-.707A4.5 4.5 0 0 1 12.025 8"/>
-                          </svg>
-                        <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
-                    </div>
+            <div class="Play_Bar">
+                <div class="track-info">
+                    <span class="track-title">播放中：</span>
                 </div>
+                <div class="controls">
+                    <button id="play-pause" class="btn btn-dark">
+                        <span id="play-icon">
+                            <!-- 播放 SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                class="bi bi-play-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393" />
+                            </svg>
+                        </span>
+                        <span id="pause-icon" style="display: none;">
+                            <!-- 暫停 SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                class="bi bi-pause-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5" />
+                            </svg>
+                        </span>
+                    </button>
 
-                <audio id="audio-player" src="Tomboy.mp3"></audio>
+                    <span id="current-time">0:00</span>
+                    <input type="range" id="seek-bar" value="0" min="0" max="100" />
+                    <span id="duration">0:00</span>
+                </div>
+                <div class="volume-control">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-volume-down-fill" viewBox="0 0 16 16" style="margin: 5px;">
+                        <path
+                            d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12zm3.025 4a4.5 4.5 0 0 1-1.318 3.182L10 10.475A3.5 3.5 0 0 0 11.025 8 3.5 3.5 0 0 0 10 5.525l.707-.707A4.5 4.5 0 0 1 12.025 8" />
+                    </svg>
+                    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
+                </div>
+            </div>
 
-                <script src="js/play.js"></script>
+
+            <script src="js/play.js"></script>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const musicId = urlParams.get("musicId");
+
+            if (!musicId) {
+                alert("缺少 musicId");
+                return;
+            }
+
+            fetch('http://localhost:8000/api/PlayMusic/play', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ musicId })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    const music = data.music[0];
+
+                    // 更新標題、歌手名稱
+                    document.getElementById('song-title').textContent = music.Music_Name || "未知歌名";
+                    document.getElementById('song-artist').textContent = music.Artist || "未知歌手";
+
+                    // 更新封面圖片
+                    const cover = document.getElementById('song-cover');
+                    cover.src = './img/1.webp';
+                    cover.alt = music.Music_Name;
+
+                    // 解碼 base64 的影片網址並嵌入 iframe
+                    const decodedUrl = atob(music.Music_Url);
+                    const videoDiv = document.querySelector('.video');
+                    videoDiv.innerHTML = `
+                        <iframe width="100%" height="400" 
+                                src="${decodedUrl}" 
+                                frameborder="0" allowfullscreen>
+                        </iframe>`;
+
+                    // 如果你仍保留 audio 播放器（目前 UI 看不出來有），以下是基本邏輯
+                    const audio = new Audio(decodedUrl); // 動態建立 audio，防止找不到 audio-player
+                    let isPlaying = false;
+
+                    const playBtn = document.getElementById('play-pause');
+                    const playIcon = document.getElementById('play-icon');
+                    const pauseIcon = document.getElementById('pause-icon');
+
+                    playBtn.addEventListener('click', () => {
+                        if (!isPlaying) {
+                            audio.play();
+                            isPlaying = true;
+                            playIcon.style.display = 'none';
+                            pauseIcon.style.display = 'inline';
+                        } else {
+                            audio.pause();
+                            isPlaying = false;
+                            playIcon.style.display = 'inline';
+                            pauseIcon.style.display = 'none';
+                        }
+                    });
+
+                    // 時間與音量控制條可以根據 audio 設定更新
+                    const seekBar = document.getElementById('seek-bar');
+                    const currentTime = document.getElementById('current-time');
+                    const durationTime = document.getElementById('duration');
+                    const volumeControl = document.getElementById('volume');
+
+                    audio.addEventListener('loadedmetadata', () => {
+                        seekBar.max = audio.duration;
+                        durationTime.textContent = formatTime(audio.duration);
+                    });
+
+                    audio.addEventListener('timeupdate', () => {
+                        seekBar.value = audio.currentTime;
+                        currentTime.textContent = formatTime(audio.currentTime);
+                    });
+
+                    seekBar.addEventListener('input', () => {
+                        audio.currentTime = seekBar.value;
+                    });
+
+                    volumeControl.addEventListener('input', () => {
+                        audio.volume = volumeControl.value;
+                    });
+
+                    function formatTime(time) {
+                        const minutes = Math.floor(time / 60);
+                        const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+                        return `${minutes}:${seconds}`;
+                    }
+                })
+                .catch(err => {
+                    console.error("播放錯誤", err);
+                });
+        });
+    </script>
+
+
 </body>
 
 </html>

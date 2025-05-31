@@ -14,6 +14,10 @@ use project\controllers\SubUserController;
 use project\controllers\BackstageController;
 use project\controllers\MusicController;
 use project\controllers\AddMusicController;
+use project\controllers\PlayMusicController;
+use project\controllers\SearchMusicController;
+use project\controllers\MusicReportController;
+
 
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -82,6 +86,12 @@ $app->router->get('/api/Music/musicplaycount', callback: [MusicController::class
 
 // $app->router->post('/api/Music/addmusictolist', [MusicController::class, 'addmusictolist']);
 $app->router->post('/api/AddMusic/addmusic', [AddMusicController::class, 'create']);
+
+$app->router->post('/api/MusicReport/create', [MusicReportController::class, 'create']);
+$app->router->get('/api/MusicReport/list', [MusicReportController::class, 'list']);
+$app->router->delete('/api/MusicReport/delete/:id', [MusicReportController::class, 'delete']);
+
+
 
 
 $app->router->post('/api/PlayMusic/play', [PlayMusicController::class, 'playMusic']);
