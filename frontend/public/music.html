@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="css/Backstage.css">
     <link rel="stylesheet" href="css/music.css" media="all">
     <link rel="stylesheet" href="css/play.css" media="all">
-    <link rel="stylesheet" href="../RWD_Front.css" />
-    <link rel="icon" href="./front/img/icon.png">
+    <!-- <link rel="stylesheet" href="css/RWD_Front.css" /> -->
+    <link rel="icon" href="img/icon.png">
     <script src="js/front_side.js"></script>
-
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 
 <body>
@@ -26,9 +26,9 @@
         <div class="main">
             <div class="top">
                 <div class="song-container" style="position: relative;">
-                    <div class="song-image">
+                    <!-- <div class="song-image">
                         <img id="song-cover" src="./img/1.webp" alt="音樂封面">
-                    </div>
+                    </div> -->
                     <div class="song-info">
                         <h1 id="song-title">載入中...</h1>
                         <p id="song-artist">未知歌手</p>
@@ -84,11 +84,14 @@
                 </div>
             </div>
 
+            <div id="music-player">
+                <iframe width="560" height="315" frameborder="0" allowfullscreen></iframe>
+            </div>
 
-            <script src="js/play.js"></script>
+            <!-- <script src="js/play.js"></script> -->
         </div>
     </div>
-    <script>
+    <!-- <script>
         document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
             const musicId = urlParams.get("musicId");
@@ -105,6 +108,7 @@
             })
                 .then(res => res.json())
                 .then(data => {
+                    
                     if (data.error) {
                         alert(data.error);
                         return;
@@ -186,9 +190,172 @@
                     console.error("播放錯誤", err);
                 });
         });
+    </script> -->
+    <script>
+       let player;
+let isPlaying = false;
+let duration = 0;
+
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const musicId = urlParams.get("musicId");
+
+    if (!musicId) {
+        alert("缺少歌曲 ID");
+        return;
+    }
+
+    fetch('http://localhost:8000/api/PlayMusic/play', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ musicId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        const music = data.music && data.music[0];
+        if (!music) {
+            alert("找不到歌曲資料");
+            return;
+        }
+
+        // 更新歌曲資訊
+        document.getElementById('song-title').textContent = music.Music_Name || "未知歌名";
+        document.querySelector('.track-title').textContent = `播放中：${music.Music_Name || "未知歌名"}`;
+        document.getElementById('song-artist').textContent = music.Artist || "未知歌手";
+
+        // 解碼並取得影片 ID
+        let decodedUrl = "";
+        try {
+            decodedUrl = atob(music.Music_Url);
+        } catch (e) {
+            alert("網址解碼失敗");
+            return;
+        }
+
+        const videoId = decodedUrl.match(/v=([^&]+)/)?.[1];
+        if (!videoId) {
+            alert("無法解析影片 ID");
+            return;
+        }
+
+        // 初始化 YouTube 播放器
+        player = new YT.Player('music-player', {
+            height: '315',
+            width: '560',
+            videoId: videoId,
+            playerVars: {
+                autoplay: 1,
+                controls: 0, // 隱藏原生控制條
+                modestbranding: 1,
+                rel: 0
+            },
+            events: {
+                'onReady': (event) => {
+                    event.target.playVideo();
+                    isPlaying = true;
+                    updatePlayPauseButton();
+                    updateDurationDisplay();
+                },
+                'onStateChange': onPlayerStateChange
+            }
+        });
+
+        // 播放/暫停按鈕
+        const playBtn = document.getElementById('play-pause');
+        playBtn.addEventListener('click', () => {
+            if (!player) return;
+            if (isPlaying) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        });
+
+        // 控制按鈕圖示顯示
+        function updatePlayPauseButton() {
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+            if (isPlaying) {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'inline';
+            } else {
+                playIcon.style.display = 'inline';
+                pauseIcon.style.display = 'none';
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+            } else if (
+                event.data === YT.PlayerState.PAUSED ||
+                event.data === YT.PlayerState.ENDED ||
+                event.data === YT.PlayerState.CUED
+            ) {
+                isPlaying = false;
+            }
+            updatePlayPauseButton();
+        }
+
+        // 音量控制
+        const volumeControl = document.getElementById('volume');
+        volumeControl.addEventListener('input', () => {
+            if (player && typeof player.setVolume === 'function') {
+                player.setVolume(volumeControl.value * 100);
+            }
+        });
+        volumeControl.value = 1;
+
+        // 進度條控制
+        const seekBar = document.getElementById('seek-bar');
+        seekBar.addEventListener('input', () => {
+            if (player && typeof player.seekTo === 'function' && duration > 0) {
+                const seekTo = (seekBar.value / 100) * duration;
+                player.seekTo(seekTo, true);
+            }
+        });
+
+        // 定時更新進度條與時間
+        setInterval(() => {
+            if (player && typeof player.getCurrentTime === "function" && typeof player.getDuration === "function") {
+                const cur = player.getCurrentTime();
+                duration = player.getDuration();
+                if (!isNaN(cur) && !isNaN(duration) && duration > 0) {
+                    seekBar.value = (cur / duration) * 100;
+                    document.getElementById('current-time').textContent = formatTime(cur);
+                    document.getElementById('duration').textContent = formatTime(duration);
+                }
+            }
+        }, 500);
+
+        // 首次載入時立即嘗試抓影片時長
+        function updateDurationDisplay() {
+            if (player && typeof player.getDuration === 'function') {
+                duration = player.getDuration();
+                if (duration > 0) {
+                    document.getElementById('duration').textContent = formatTime(duration);
+                }
+            }
+        }
+    })
+    .catch(err => {
+        alert("請求失敗：" + err);
+    });
+});
+
+function formatTime(time) {
+    time = Math.floor(time);
+    const minutes = Math.floor(time / 60);
+    const seconds = (time % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+}
+
     </script>
-
-
 </body>
 
 </html>
