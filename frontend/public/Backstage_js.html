@@ -34,7 +34,7 @@
         <h3>歌曲數量</h3>
         <p>3</p>
       </div>
-      <div class="card" onclick="location.href='Back_statistics.html'" style="cursor: pointer;">
+      <div class="card" onclick="location.href='BackPeople.html'" style="cursor: pointer;">
         <h3>用戶數</h3>
         <p>25</p>
       </div>
@@ -162,7 +162,7 @@
       trackDiv.className = 'hot-track';
       trackDiv.innerHTML = `<strong>Top ${index + 1}</strong> - ${song.Music_Name || `第${index + 1}名歌曲`}`;
       trackDiv.onclick = () => {
-        location.href = `music.html?id=${song.Music_ID}`;
+        location.href = `Backmusic.html?id=${song.Music_ID}`;
       };
       hotTracksContainer.appendChild(trackDiv);
     });
