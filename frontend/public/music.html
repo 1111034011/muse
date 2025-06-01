@@ -198,7 +198,7 @@ let duration = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const musicId = urlParams.get("musicId");
+    const musicId = urlParams.get("id");
 
     if (!musicId) {
         alert("缺少歌曲 ID");
