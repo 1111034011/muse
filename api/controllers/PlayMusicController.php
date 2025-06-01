@@ -96,11 +96,11 @@ class PlayMusicController
                 $response_data = json_decode($response, true);
 
                 // 確保回應成功解析並包含目標鍵值
-                if (is_array($response_data) && isset($response_data["music_routur"])) {
-                    $music[0]["Music_Url"] = $response_data["music_routur"];
-                } else {
-                    echo "回應格式不正確或未包含 'music_routur'";
-                }
+                // if (is_array($response_data) && isset($response_data["music_routur"])) {
+                //     $music[0]["Music_Url"] = $response_data["music_routur"];
+                // } else {
+                //     echo "回應格式不正確或未包含 'music_routur'";
+                // }
             }
             // 關閉 cURL
             curl_close($ch);
